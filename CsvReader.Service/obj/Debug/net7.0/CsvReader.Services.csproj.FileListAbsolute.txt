@@ -1,0 +1,5 @@
+C:\dev\personal\csv-reader-app\CsvReaderAppConsole\CsvReader.Service\obj\Debug\net7.0\CsvReader.Services.csproj.AssemblyReference.cache
+C:\dev\personal\csv-reader-app\CsvReaderAppConsole\CsvReader.Service\obj\Debug\net7.0\CsvReader.Services.GeneratedMSBuildEditorConfig.editorconfig
+C:\dev\personal\csv-reader-app\CsvReaderAppConsole\CsvReader.Service\obj\Debug\net7.0\CsvReader.Services.AssemblyInfoInputs.cache
+C:\dev\personal\csv-reader-app\CsvReaderAppConsole\CsvReader.Service\obj\Debug\net7.0\CsvReader.Services.AssemblyInfo.cs
+C:\dev\personal\csv-reader-app\CsvReaderAppConsole\CsvReader.Service\obj\Debug\net7.0\CsvReader.Services.csproj.CoreCompileInputs.cache
