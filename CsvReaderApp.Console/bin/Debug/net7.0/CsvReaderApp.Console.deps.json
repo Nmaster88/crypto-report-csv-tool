@@ -27,6 +27,15 @@
         "runtime": {
           "CsvReaderApp.Models.dll": {}
         }
+      },
+      "CsvReaderApp.Services/1.0.0": {
+        "dependencies": {
+          "CsvHelper": "30.0.1",
+          "CsvReaderApp.Models": "1.0.0"
+        },
+        "runtime": {
+          "CsvReaderApp.Services.dll": {}
+        }
       }
     }
   },
@@ -44,6 +53,11 @@
       "hashPath": "csvhelper.30.0.1.nupkg.sha512"
     },
     "CsvReaderApp.Models/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "CsvReaderApp.Services/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

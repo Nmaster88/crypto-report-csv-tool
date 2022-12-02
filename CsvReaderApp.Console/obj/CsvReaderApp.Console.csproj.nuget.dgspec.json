@@ -4,126 +4,6 @@
     "C:\\dev\\personal\\csv-reader-app\\CsvReaderApp.Console\\CsvReaderApp.Console.csproj": {}
   },
   "projects": {
-    "C:\\dev\\personal\\csv-reader-app\\CsvReader.Models\\CsvReaderApp.Models.csproj": {
-      "version": "1.0.0",
-      "restore": {
-        "projectUniqueName": "C:\\dev\\personal\\csv-reader-app\\CsvReader.Models\\CsvReaderApp.Models.csproj",
-        "projectName": "CsvReaderApp.Models",
-        "projectPath": "C:\\dev\\personal\\csv-reader-app\\CsvReader.Models\\CsvReaderApp.Models.csproj",
-        "packagesPath": "C:\\Users\\Nuno\\.nuget\\packages\\",
-        "outputPath": "C:\\dev\\personal\\csv-reader-app\\CsvReader.Models\\obj\\",
-        "projectStyle": "PackageReference",
-        "configFilePaths": [
-          "C:\\Users\\Nuno\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
-        ],
-        "originalTargetFrameworks": [
-          "net7.0"
-        ],
-        "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://api.nuget.org/v3/index.json": {}
-        },
-        "frameworks": {
-          "net7.0": {
-            "targetAlias": "net7.0",
-            "projectReferences": {}
-          }
-        },
-        "warningProperties": {
-          "warnAsError": [
-            "NU1605"
-          ]
-        }
-      },
-      "frameworks": {
-        "net7.0": {
-          "targetAlias": "net7.0",
-          "imports": [
-            "net461",
-            "net462",
-            "net47",
-            "net471",
-            "net472",
-            "net48",
-            "net481"
-          ],
-          "assetTargetFallback": true,
-          "warn": true,
-          "frameworkReferences": {
-            "Microsoft.NETCore.App": {
-              "privateAssets": "all"
-            }
-          },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.100\\RuntimeIdentifierGraph.json"
-        }
-      }
-    },
-    "C:\\dev\\personal\\csv-reader-app\\CsvReader.Service\\CsvReaderApp.Services.csproj": {
-      "version": "1.0.0",
-      "restore": {
-        "projectUniqueName": "C:\\dev\\personal\\csv-reader-app\\CsvReader.Service\\CsvReaderApp.Services.csproj",
-        "projectName": "CsvReaderApp.Services",
-        "projectPath": "C:\\dev\\personal\\csv-reader-app\\CsvReader.Service\\CsvReaderApp.Services.csproj",
-        "packagesPath": "C:\\Users\\Nuno\\.nuget\\packages\\",
-        "outputPath": "C:\\dev\\personal\\csv-reader-app\\CsvReader.Service\\obj\\",
-        "projectStyle": "PackageReference",
-        "configFilePaths": [
-          "C:\\Users\\Nuno\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
-        ],
-        "originalTargetFrameworks": [
-          "net7.0"
-        ],
-        "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://api.nuget.org/v3/index.json": {}
-        },
-        "frameworks": {
-          "net7.0": {
-            "targetAlias": "net7.0",
-            "projectReferences": {
-              "C:\\dev\\personal\\csv-reader-app\\CsvReader.Models\\CsvReaderApp.Models.csproj": {
-                "projectPath": "C:\\dev\\personal\\csv-reader-app\\CsvReader.Models\\CsvReaderApp.Models.csproj"
-              }
-            }
-          }
-        },
-        "warningProperties": {
-          "warnAsError": [
-            "NU1605"
-          ]
-        }
-      },
-      "frameworks": {
-        "net7.0": {
-          "targetAlias": "net7.0",
-          "dependencies": {
-            "CsvHelper": {
-              "target": "Package",
-              "version": "[30.0.1, )"
-            }
-          },
-          "imports": [
-            "net461",
-            "net462",
-            "net47",
-            "net471",
-            "net472",
-            "net48",
-            "net481"
-          ],
-          "assetTargetFallback": true,
-          "warn": true,
-          "frameworkReferences": {
-            "Microsoft.NETCore.App": {
-              "privateAssets": "all"
-            }
-          },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.100\\RuntimeIdentifierGraph.json"
-        }
-      }
-    },
     "C:\\dev\\personal\\csv-reader-app\\CsvReaderApp.Console\\CsvReaderApp.Console.csproj": {
       "version": "1.0.0",
       "restore": {
@@ -148,9 +28,6 @@
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "C:\\dev\\personal\\csv-reader-app\\CsvReader.Service\\CsvReaderApp.Services.csproj": {
-                "projectPath": "C:\\dev\\personal\\csv-reader-app\\CsvReader.Service\\CsvReaderApp.Services.csproj"
-              },
               "C:\\dev\\personal\\csv-reader-app\\CsvReaderApp.Models\\CsvReaderApp.Models.csproj": {
                 "projectPath": "C:\\dev\\personal\\csv-reader-app\\CsvReaderApp.Models\\CsvReaderApp.Models.csproj"
               },
@@ -268,9 +145,6 @@
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "C:\\dev\\personal\\csv-reader-app\\CsvReader.Models\\CsvReaderApp.Models.csproj": {
-                "projectPath": "C:\\dev\\personal\\csv-reader-app\\CsvReader.Models\\CsvReaderApp.Models.csproj"
-              },
               "C:\\dev\\personal\\csv-reader-app\\CsvReaderApp.Models\\CsvReaderApp.Models.csproj": {
                 "projectPath": "C:\\dev\\personal\\csv-reader-app\\CsvReaderApp.Models\\CsvReaderApp.Models.csproj"
               }

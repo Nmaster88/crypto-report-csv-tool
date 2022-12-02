@@ -73,8 +73,8 @@
     },
     "CsvReaderApp.Services/1.0.0": {
       "type": "project",
-      "path": "../CsvReader.Service/CsvReaderApp.Services.csproj",
-      "msbuildProject": "../CsvReader.Service/CsvReaderApp.Services.csproj"
+      "path": "../CsvReaderApp.Service/CsvReaderApp.Services.csproj",
+      "msbuildProject": "../CsvReaderApp.Service/CsvReaderApp.Services.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -110,9 +110,6 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "C:\\dev\\personal\\csv-reader-app\\CsvReader.Service\\CsvReaderApp.Services.csproj": {
-              "projectPath": "C:\\dev\\personal\\csv-reader-app\\CsvReader.Service\\CsvReaderApp.Services.csproj"
-            },
             "C:\\dev\\personal\\csv-reader-app\\CsvReaderApp.Models\\CsvReaderApp.Models.csproj": {
               "projectPath": "C:\\dev\\personal\\csv-reader-app\\CsvReaderApp.Models\\CsvReaderApp.Models.csproj"
             },
