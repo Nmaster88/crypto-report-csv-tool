@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33110.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CsvReaderApp.Console", "ConsoleApp1\CsvReaderApp.Console.csproj", "{B03BD858-9330-4454-BA14-E161BB38AAAF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CsvReaderApp.Console", "CsvReaderApp.Console\CsvReaderApp.Console.csproj", "{B03BD858-9330-4454-BA14-E161BB38AAAF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CsvReaderApp.Services", "CsvReader.Service\CsvReaderApp.Services.csproj", "{0F760296-ED35-4382-98E4-3970EDB724F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CsvReaderApp.Services", "CsvReaderApp.Service\CsvReaderApp.Services.csproj", "{0F760296-ED35-4382-98E4-3970EDB724F3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CsvReaderApp.Models", "CsvReader.Models\CsvReaderApp.Models.csproj", "{C1242FD6-E64A-4A54-933E-8F54C3461DC8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CsvReaderApp.Models", "CsvReaderApp.Models\CsvReaderApp.Models.csproj", "{C1242FD6-E64A-4A54-933E-8F54C3461DC8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "PPAj77+yiGuQmcXTcyU14FrhM/HoAum/ppZi81CLQp/M7/eOsiGDghrWU06yQ7s39O39Zq4r7LUle5SXa8BzvA==",
+  "success": true,
+  "projectFilePath": "C:\\dev\\personal\\csv-reader-app\\CsvReaderApp.Service\\CsvReaderApp.Services.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Nuno\\.nuget\\packages\\csvhelper\\30.0.1\\csvhelper.30.0.1.nupkg.sha512"
+  ],
+  "logs": []
+}
