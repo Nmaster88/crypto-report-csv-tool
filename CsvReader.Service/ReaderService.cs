@@ -1,7 +1,5 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
-using CsvReaderApp.Models;
-using System.Data;
 using System.Globalization;
 
 namespace CsvReaderApp.Services
@@ -15,17 +13,13 @@ namespace CsvReaderApp.Services
             FilePath = filePath ?? throw new ArgumentNullException(filePath);
         }
 
-        public IEnumerable<T> Read<T>()
+        public List<T> ReadRecords<T>()
         {
-            IEnumerable<T>? records = null;
-            var config = new CsvConfiguration(CultureInfo.InvariantCulture)
-            {
-                NewLine = Environment.NewLine,
-            };
+            List<T>? records = null;
             using (var reader = new StreamReader(FilePath))
-            using (var Csv = new CsvReader(reader, config))
+            using (var Csv = new CsvReader(reader, CultureInfo.InvariantCulture))
             {
-                records = Csv.GetRecords<T>();
+                records = Csv.GetRecords<T>().ToList();
             }
 
             return records;

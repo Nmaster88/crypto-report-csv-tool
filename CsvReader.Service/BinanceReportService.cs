@@ -1,11 +1,5 @@
-﻿using CsvHelper;
-using CsvReaderApp.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CsvReaderApp.Models;
+using System.Globalization;
 
 namespace CsvReaderApp.Services
 {
@@ -17,15 +11,44 @@ namespace CsvReaderApp.Services
 
         public List<string> Accounts { get; set; }
 
+        public List<Dictionary<string,List<BinanceReportResult>>> BinanceReportResults { get; set; }
 
+        public BinanceReportService() 
+        { 
+            BinanceReportResults = new List<Dictionary<string, List<BinanceReportResult>>>();
+        }
 
-        public BinanceReportService() { }
-
-        public void Execute(IEnumerable<BinanceReport> binanceReports)
+        public void Execute(List<BinanceReport> binanceReports)
         {
             foreach (BinanceReport binanceReport in binanceReports)
             {
+                AddNewBinanceReport(binanceReport);
+            }
+        }
 
+        public void AddNewBinanceReport(BinanceReport binanceReport) 
+        {
+            if (binanceReport == null)
+                return;
+
+            BinanceReportResult binanceReportResult = new BinanceReportResult();
+            binanceReportResult.Operation = binanceReport.Operation;
+            binanceReportResult.Coin = binanceReport.Coin;
+            binanceReportResult.Change = decimal.Parse(binanceReport.Change, NumberStyles.Float);
+            binanceReportResult.Remark = binanceReport.Remark;
+
+            var element = BinanceReportResults?.FirstOrDefault(elem => elem.ContainsKey(binanceReport.Account));
+            if (element != null)
+            {
+                element.Values.FirstOrDefault()?.Add(binanceReportResult);
+            }
+            else
+            {
+                List<BinanceReportResult> binanceReportResults = new List<BinanceReportResult>();
+                binanceReportResults.Add(binanceReportResult);
+                Dictionary<string, List<BinanceReportResult>> keyValues = new Dictionary<string, List<BinanceReportResult>>();
+                keyValues.Add(binanceReport.Account, binanceReportResults);
+                BinanceReportResults?.Add(keyValues);
             }
         }
     }
