@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CsvReader.Models\CsvReaderApp.Models.csproj" />
+    <ProjectReference Include="..\CsvReaderApp.Models\CsvReaderApp.Models.csproj" />
   </ItemGroup>
 
 </Project>

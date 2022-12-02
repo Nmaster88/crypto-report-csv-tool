@@ -11,10 +11,10 @@ namespace CsvReaderApp.Services
 
         public List<string> Accounts { get; set; }
 
-        public List<Dictionary<string,List<BinanceReportResult>>> BinanceReportResults { get; set; }
+        public List<Dictionary<string, List<BinanceReportResult>>> BinanceReportResults { get; set; }
 
-        public BinanceReportService() 
-        { 
+        public BinanceReportService()
+        {
             BinanceReportResults = new List<Dictionary<string, List<BinanceReportResult>>>();
         }
 
@@ -26,7 +26,7 @@ namespace CsvReaderApp.Services
             }
         }
 
-        public void AddNewBinanceReport(BinanceReport binanceReport) 
+        public void AddNewBinanceReport(BinanceReport binanceReport)
         {
             if (binanceReport == null)
                 return;
