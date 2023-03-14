@@ -11,11 +11,13 @@ namespace CsvReaderApp.Services
 
         public List<string> Accounts { get; set; }
 
-        public List<Dictionary<string, List<BinanceReportResult>>> BinanceReportResults { get; set; }
+        public List<Dictionary<string, List<AccountReportResult>>> AccountReportResults { get; set; }
+
+        public List<AccountReportResult> AggregatedReportResults { get; set; }
 
         public BinanceReportService()
         {
-            BinanceReportResults = new List<Dictionary<string, List<BinanceReportResult>>>();
+            AccountReportResults = new List<Dictionary<string, List<AccountReportResult>>>();
         }
 
         public void Execute(List<BinanceReport> binanceReports)
@@ -24,31 +26,60 @@ namespace CsvReaderApp.Services
             {
                 AddNewBinanceReport(binanceReport);
             }
+
+            if(AccountReportResults != null)
+            {
+                foreach (var binanceReportResult in AccountReportResults)
+                {
+                    ProcessAccountReport(binanceReportResult);
+                }
+            }
         }
 
-        public void AddNewBinanceReport(BinanceReport binanceReport)
+        private void ProcessAccountReport(Dictionary<string, List<AccountReportResult>> accountReportResult)
+        {
+            Console.WriteLine($"Account: {accountReportResult.Keys}");
+
+            var element = AccountReportResults?.FirstOrDefault(elem => elem.ContainsKey(accountReportResult.Keys));
+            if (element != null)
+            {
+                element.Values.FirstOrDefault()?.Add(accountReportResult.Values);
+            }
+            else
+            {
+                List<AccountReportResult> binanceReportResults = new List<AccountReportResult>();
+                binanceReportResults.Add(accountReportResult);
+                Dictionary<string, List<AccountReportResult>> keyValues = new Dictionary<string, List<AccountReportResult>>();
+                keyValues.Add(binanceReport.Account, binanceReportResults);
+                AccountReportResults?.Add(keyValues);
+            }
+
+            throw new NotImplementedException();
+        }
+
+        private void AddNewBinanceReport(BinanceReport binanceReport)
         {
             if (binanceReport == null)
                 return;
 
-            BinanceReportResult binanceReportResult = new BinanceReportResult();
-            binanceReportResult.Operation = binanceReport.Operation;
-            binanceReportResult.Coin = binanceReport.Coin;
-            binanceReportResult.Change = decimal.Parse(binanceReport.Change, NumberStyles.Float);
-            binanceReportResult.Remark = binanceReport.Remark;
+            AccountReportResult accountReportResult = new AccountReportResult();
+            accountReportResult.Operation = binanceReport.Operation;
+            accountReportResult.Coin = binanceReport.Coin;
+            accountReportResult.Change = decimal.Parse(binanceReport.Change, NumberStyles.Float);
+            accountReportResult.Remark = binanceReport.Remark;
 
-            var element = BinanceReportResults?.FirstOrDefault(elem => elem.ContainsKey(binanceReport.Account));
+            var element = AccountReportResults?.FirstOrDefault(elem => elem.ContainsKey(binanceReport.Account));
             if (element != null)
             {
-                element.Values.FirstOrDefault()?.Add(binanceReportResult);
+                element.Values.FirstOrDefault()?.Add(accountReportResult);
             }
             else
             {
-                List<BinanceReportResult> binanceReportResults = new List<BinanceReportResult>();
-                binanceReportResults.Add(binanceReportResult);
-                Dictionary<string, List<BinanceReportResult>> keyValues = new Dictionary<string, List<BinanceReportResult>>();
+                List<AccountReportResult> binanceReportResults = new List<AccountReportResult>();
+                binanceReportResults.Add(accountReportResult);
+                Dictionary<string, List<AccountReportResult>> keyValues = new Dictionary<string, List<AccountReportResult>>();
                 keyValues.Add(binanceReport.Account, binanceReportResults);
-                BinanceReportResults?.Add(keyValues);
+                AccountReportResults?.Add(keyValues);
             }
         }
     }

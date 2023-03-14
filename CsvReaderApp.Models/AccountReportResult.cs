@@ -1,6 +1,6 @@
 ﻿namespace CsvReaderApp.Models
 {
-    public class BinanceReportResult
+    public class AccountReportResult
     {
         public string Operation { get; set; }
         public string Coin { get; set; }
