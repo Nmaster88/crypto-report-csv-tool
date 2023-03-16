@@ -25,7 +25,7 @@ namespace CsvReaderApp.Services
                 AddNewBinanceReport(binanceReport);
             }
 
-            foreach (var result in BinanceReportResultsByAccount.Where(x => x.ContainsKey(AccountEnum.Spot)))
+            foreach (var result in BinanceReportResultsByAccount.Where(x => x.ContainsKey(AccountEnum.Spot.ToString())))
             {
                 Console.WriteLine($"Result: {result.Key}");
                 var binanceReportOrderedByCoin = result.Value.OrderBy(x => x.Coin);
