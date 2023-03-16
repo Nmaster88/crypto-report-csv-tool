@@ -27,8 +27,16 @@ namespace CsvReaderApp.Services
 
             foreach (var result in BinanceReportResultsByAccount.Where(x => x.ContainsKey(AccountEnum.Spot.ToString())))
             {
-                Console.WriteLine($"Result: {result.Key}");
-                var binanceReportOrderedByCoin = result.Value.OrderBy(x => x.Coin);
+                Console.WriteLine($"Total {OperationEnum.Deposit.ToString()} By coin.");
+                if(result.TryGetValue(OperationEnum.Deposit.ToString(), out List<AccountReportResult> value))
+                {
+                    var test = value.GroupBy(c => c.Coin).Select(x => new {Coin = x.Key, Change = x.Sum(e => e.Change) });
+                    foreach (var accountReport in test)
+                    {
+                        Console.WriteLine($"| {accountReport.Coin} | {accountReport.Change} |");
+                    }
+                }
+                //var binanceReportOrderedByCoin = result.TryGetValue[OperationEnum.Deposit.ToString()].Values.Where(o => o.Where(x=>x.Operation == OperationEnum.Deposit.ToString()).GroupBy(x => x.Coin));
             }
 
             ProcessingBinanceReport();
