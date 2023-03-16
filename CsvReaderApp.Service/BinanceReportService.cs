@@ -11,13 +11,11 @@ namespace CsvReaderApp.Services
 
         public List<string> Accounts { get; set; }
 
-        public List<Dictionary<string, List<AccountReportResult>>> AccountReportResults { get; set; }
-
-        public List<AccountReportResult> AggregatedReportResults { get; set; }
+        public List<Dictionary<string, List<AccountReportResult>>> BinanceReportResultsByAccount { get; set; }
 
         public BinanceReportService()
         {
-            AccountReportResults = new List<Dictionary<string, List<AccountReportResult>>>();
+            BinanceReportResultsByAccount = new List<Dictionary<string, List<AccountReportResult>>>();
         }
 
         public void Execute(List<BinanceReport> binanceReports)
@@ -27,33 +25,20 @@ namespace CsvReaderApp.Services
                 AddNewBinanceReport(binanceReport);
             }
 
-            if(AccountReportResults != null)
+            foreach (var binanceReport in BinanceReportResultsByAccount)
             {
-                foreach (var binanceReportResult in AccountReportResults)
+                foreach (var result in binanceReport)
                 {
-                    ProcessAccountReport(binanceReportResult);
+                    Console.WriteLine($"Result: {result.Key}");
+                    var binanceReportOrderedByCoin = result.Value.OrderBy(x => x.Coin);
                 }
             }
+
+            ProcessingBinanceReport();
         }
 
-        private void ProcessAccountReport(Dictionary<string, List<AccountReportResult>> accountReportResult)
+        private void ProcessingBinanceReport()
         {
-            Console.WriteLine($"Account: {accountReportResult.Keys}");
-
-            var element = AccountReportResults?.FirstOrDefault(elem => elem.ContainsKey(accountReportResult.Keys));
-            if (element != null)
-            {
-                element.Values.FirstOrDefault()?.Add(accountReportResult.Values);
-            }
-            else
-            {
-                List<AccountReportResult> binanceReportResults = new List<AccountReportResult>();
-                binanceReportResults.Add(accountReportResult);
-                Dictionary<string, List<AccountReportResult>> keyValues = new Dictionary<string, List<AccountReportResult>>();
-                keyValues.Add(binanceReport.Account, binanceReportResults);
-                AccountReportResults?.Add(keyValues);
-            }
-
             throw new NotImplementedException();
         }
 
@@ -68,7 +53,7 @@ namespace CsvReaderApp.Services
             accountReportResult.Change = decimal.Parse(binanceReport.Change, NumberStyles.Float);
             accountReportResult.Remark = binanceReport.Remark;
 
-            var element = AccountReportResults?.FirstOrDefault(elem => elem.ContainsKey(binanceReport.Account));
+            var element = BinanceReportResultsByAccount?.FirstOrDefault(elem => elem.ContainsKey(binanceReport.Account));
             if (element != null)
             {
                 element.Values.FirstOrDefault()?.Add(accountReportResult);
@@ -79,7 +64,16 @@ namespace CsvReaderApp.Services
                 binanceReportResults.Add(accountReportResult);
                 Dictionary<string, List<AccountReportResult>> keyValues = new Dictionary<string, List<AccountReportResult>>();
                 keyValues.Add(binanceReport.Account, binanceReportResults);
-                AccountReportResults?.Add(keyValues);
+                BinanceReportResultsByAccount?.Add(keyValues);
+            }
+        }
+
+        private void PrintReport(string key, List<AccountReportResult> binanceReportResults)
+        {
+            Console.WriteLine($"For the {key} we have the following results:");
+            foreach (var binanceReportResult in binanceReportResults)
+            {
+                Console.WriteLine($"| {binanceReportResult.Coin} | {binanceReportResult.Operation} | {binanceReportResult.Remark} | {binanceReportResult.Change} |");
             }
         }
     }
