@@ -26,7 +26,7 @@ namespace CsvReaderApp.Services
             }
         }
 
-        public void AddNewBinanceReport(BinanceReport binanceReport)
+        private void AddNewBinanceReport(BinanceReport binanceReport)
         {
             if (binanceReport == null)
                 return;
@@ -49,6 +49,15 @@ namespace CsvReaderApp.Services
                 Dictionary<string, List<BinanceReportResult>> keyValues = new Dictionary<string, List<BinanceReportResult>>();
                 keyValues.Add(binanceReport.Account, binanceReportResults);
                 BinanceReportResults?.Add(keyValues);
+            }
+        }
+
+        private void PrintReport(string key, List<BinanceReportResult> binanceReportResults)
+        {
+            Console.WriteLine($"For the {key} we have the following results:");
+            foreach (var binanceReportResult in binanceReportResults)
+            {
+                Console.WriteLine($"| {binanceReportResult.Coin} | {binanceReportResult.Operation} | {binanceReportResult.Remark} | {binanceReportResult.Change} |");
             }
         }
     }
