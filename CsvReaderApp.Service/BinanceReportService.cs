@@ -28,16 +28,21 @@ namespace CsvReaderApp.Services
             foreach (var result in BinanceReportResultsByAccount.Where(x => x.ContainsKey(AccountEnum.Spot.ToString())))
             {
                 Console.WriteLine($"Total {OperationEnum.Deposit.ToString()} By coin.");
-                if(result.TryGetValue(OperationEnum.Deposit.ToString(), out List<AccountReportResult> value))
+                if (!result.TryGetValue(OperationEnum.Deposit.ToString(), out var value))
                 {
-                    var test = value.GroupBy(c => c.Coin).Select(x => new {Coin = x.Key, Change = x.Sum(e => e.Change) });
-                    foreach (var accountReport in test)
-                    {
-                        Console.WriteLine($"| {accountReport.Coin} | {accountReport.Change} |");
-                    }
+                    break;
+                }
+
+                var test = value.GroupBy(c => c.Coin).Select(x => new { Coin = x.Key, Change = x.Sum(e => e.Change) });
+
+                foreach (var accountReport in test)
+                {
+                    Console.WriteLine($"| {accountReport.Coin} | {accountReport.Change} |");
                 }
                 //var binanceReportOrderedByCoin = result.TryGetValue[OperationEnum.Deposit.ToString()].Values.Where(o => o.Where(x=>x.Operation == OperationEnum.Deposit.ToString()).GroupBy(x => x.Coin));
             }
+
+            Console.WriteLine();
 
             ProcessingBinanceReport();
         }
@@ -55,7 +60,7 @@ namespace CsvReaderApp.Services
             AccountReportResult accountReportResult = new AccountReportResult();
             accountReportResult.Operation = binanceReport.Operation;
             accountReportResult.Coin = binanceReport.Coin;
-            accountReportResult.Change = decimal.Parse(binanceReport.Change, NumberStyles.Float);
+            accountReportResult.Change = decimal.Parse(binanceReport.Change, NumberStyles.Float | NumberStyles.AllowExponent, CultureInfo.InvariantCulture);
             accountReportResult.Remark = binanceReport.Remark;
 
             var element = BinanceReportResultsByAccount?.FirstOrDefault(elem => elem.ContainsKey(binanceReport.Account));
