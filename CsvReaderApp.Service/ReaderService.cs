@@ -3,7 +3,11 @@ using System.Globalization;
 
 namespace CsvReaderApp.Services
 {
-    public class ReaderService
+    public interface IReaderService
+    {
+        List<T> ReadRecords<T>();
+    }
+    public class ReaderService : IReaderService
     {
         public string FilePath { get; }
 
