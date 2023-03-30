@@ -15,8 +15,6 @@ namespace CsvReaderApp.Services
             _reader = reader ?? throw new ArgumentNullException(nameof(reader));
         }
 
-        public string FilePath { get; }
-
         public List<T> ReadRecords<T>(string filePath)
         {
             _ = filePath ?? throw new ArgumentNullException(filePath);
