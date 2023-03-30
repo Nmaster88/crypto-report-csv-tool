@@ -28,27 +28,11 @@ namespace CsvReaderApp.Services
 
             foreach (var result in BinanceReportResultsByAccount.Where(x => x.ContainsKey(AccountEnum.Spot.ToString())))
             {
-                PrintAggregatedResultByOperationType("Deposit", result);
-
-                PrintAggregatedResultByOperationType("Transaction_Related", result);
-
-                PrintAggregatedResultByOperationType("Large_OTC_trading", result);
-
-                PrintAggregatedResultByOperationType("Super_BNB_Mining", result);
-
-                PrintAggregatedResultByOperationType("Buy", result);
-
-                PrintAggregatedResultByOperationType("Sell", result);
-
-                PrintAggregatedResultByOperationType("Fee", result);
-
-                PrintAggregatedResultByOperationType("Referral_Kickback", result);
-
-                PrintAggregatedResultByOperationType("POS_savings_interest", result);
-
-                PrintAggregatedResultByOperationType("POS_savings_purchase", result);
+                foreach (OperationEnum operation in Enum.GetValues(typeof(OperationEnum)))
+                {
+                    PrintAggregatedResultByOperationType(operation.ToString(), result);
+                }
             }
-
 
             Console.WriteLine();
 
