@@ -1,4 +1,5 @@
 ﻿// See https://aka.ms/new-console-template for more information
+using Common.Services;
 using CsvReaderApp.Models;
 using CsvReaderApp.Services;
 using Microsoft.Extensions.Configuration;
@@ -11,8 +12,9 @@ string fileName = configuration.GetSection("AppSettings").GetValue<string>("File
 string filePath = Path.GetFullPath($"{directory}{Path.DirectorySeparatorChar}{fileName}");
 
 
-ReaderService readerService = new ReaderService(filePath);
-var binanceReport = readerService.ReadRecords<BinanceReport>();
+IReader reader = new CsvReaderService();
+ReaderService readerService = new ReaderService(reader);
+var binanceReport = readerService.ReadRecords<BinanceReport>(filePath);
 
 BinanceReportService binanceReportService = new BinanceReportService();
 binanceReportService.Execute(binanceReport);
