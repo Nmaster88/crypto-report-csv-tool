@@ -5,7 +5,7 @@ namespace CommonServicesTests
     [TestClass]
     public class CsvReaderServiceTests
     {
-        private ICsvReader _csvReader;
+        private IReader _csvReader;
 
         private string _testFilePath = $"files{Path.DirectorySeparatorChar}test.csv"; // Path to a test CSV file
 

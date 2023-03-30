@@ -1,5 +1,4 @@
-﻿using CsvHelper;
-using System.Globalization;
+﻿using Common.Services;
 
 namespace CsvReaderApp.Services
 {
@@ -9,6 +8,12 @@ namespace CsvReaderApp.Services
     }
     public class ReaderService : IReaderService
     {
+        private readonly IReader _reader;
+
+        public ReaderService(IReader reader)
+        {
+        }
+
         public string FilePath { get; }
 
         public ReaderService(string filePath)
@@ -18,12 +23,7 @@ namespace CsvReaderApp.Services
 
         public List<T> ReadRecords<T>()
         {
-            List<T>? records = null;
-            using (var reader = new StreamReader(FilePath))
-            using (var Csv = new CsvReader(reader, CultureInfo.InvariantCulture))
-            {
-                records = Csv.GetRecords<T>().ToList();
-            }
+            List<T>? records = _reader.ReadRecords<T>();
 
             return records;
         }
