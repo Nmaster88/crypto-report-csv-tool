@@ -25,14 +25,14 @@ namespace Common.Services
         {
             List<T>? records = null;
 
-            records = _csvReader.GetRecords<T>().ToList();
+            records = _csvReader?.GetRecords<T>().ToList();
 
             return records;
         }
         public void Close()
         {
-            _csvReader.Dispose();
-            _streamReader.Dispose();
+            _csvReader?.Dispose();
+            _streamReader?.Dispose();
         }
         public void Dispose()
         {
