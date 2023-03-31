@@ -1,5 +1,4 @@
 ﻿using CsvReaderApp.Models;
-using System.Drawing;
 using System.Globalization;
 
 namespace CsvReaderApp.Services
@@ -34,7 +33,7 @@ namespace CsvReaderApp.Services
                 }
             }
 
-            Console.WriteLine();
+            Console.ReadLine();
 
             ProcessingBinanceReport();
         }
