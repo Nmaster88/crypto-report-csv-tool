@@ -16,7 +16,9 @@ IReader reader = new CsvReaderService();
 ReaderService readerService = new ReaderService(reader);
 var binanceReport = readerService.ReadRecords<BinanceReport>(filePath);
 
-BinanceReportService binanceReportService = new BinanceReportService();
+//BinanceReportService binanceReportService = new BinanceReportService();
+//binanceReportService.Execute(binanceReport);
+ReportService binanceReportService = new ReportService();
 binanceReportService.Execute(binanceReport);
 
 static IConfiguration ConfigurationSetup()
