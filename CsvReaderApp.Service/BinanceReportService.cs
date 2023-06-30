@@ -22,7 +22,7 @@ namespace CsvReaderApp.Services
         {
             foreach (BinanceReport binanceReport in binanceReports)
             {
-                AddNewBinanceReport(binanceReport);
+                AddReport(binanceReport);
             }
 
             foreach (var result in BinanceReportResultsByAccount.Where(x => x.ContainsKey(AccountEnum.Spot.ToString())))
@@ -129,7 +129,7 @@ namespace CsvReaderApp.Services
             throw new NotImplementedException();
         }
 
-        private void AddNewBinanceReport(BinanceReport binanceReport)
+        private void AddReport(BinanceReport binanceReport)
         {
             if (binanceReport == null)
                 return;
