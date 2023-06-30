@@ -18,12 +18,9 @@ namespace CsvReaderApp.Services
             BinanceReportResultsByAccount = new List<Dictionary<string, List<AccountReportResult>>>();
         }
 
-        public void Execute(List<BinanceReport> binanceReports)
+        public void Execute(List<BinanceReportEntry> binanceReports)
         {
-            foreach (BinanceReport binanceReport in binanceReports)
-            {
-                AddReport(binanceReport);
-            }
+            AddReportToResults(binanceReports);
 
             foreach (var result in BinanceReportResultsByAccount.Where(x => x.ContainsKey(AccountEnum.Spot.ToString())))
             {
@@ -124,12 +121,20 @@ namespace CsvReaderApp.Services
             ProcessingBinanceReport();
         }
 
+        private void AddReportToResults(List<BinanceReportEntry> binanceReports)
+        {
+            foreach (BinanceReportEntry binanceReport in binanceReports)
+            {
+                AddAccountReportResult(binanceReport);
+            }
+        }
+
         private void ProcessingBinanceReport()
         {
             throw new NotImplementedException();
         }
 
-        private void AddReport(BinanceReport binanceReport)
+        private void AddAccountReportResult(BinanceReportEntry binanceReport)
         {
             if (binanceReport == null)
                 return;

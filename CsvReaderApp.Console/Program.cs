@@ -14,7 +14,7 @@ string filePath = Path.GetFullPath($"{directory}{Path.DirectorySeparatorChar}{fi
 
 IReader reader = new CsvReaderService();
 ReaderService readerService = new ReaderService(reader);
-var binanceReport = readerService.ReadRecords<BinanceReport>(filePath);
+var binanceReport = readerService.ReadRecords<BinanceReportEntry>(filePath);
 
 //BinanceReportService binanceReportService = new BinanceReportService();
 //binanceReportService.Execute(binanceReport);
