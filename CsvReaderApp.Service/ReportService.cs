@@ -46,8 +46,6 @@ namespace CsvReaderApp.Services
         private static void GetPropertiesOfObject(PropertyInfo currentProperty, object enumerator)
         {
             object currentItem = currentProperty.GetValue(enumerator);
-            // Get the type of the object
-            Type objectType = enumerator.GetType();
 
             // Get the type of the current item
             Type currentItemType = currentItem.GetType();
