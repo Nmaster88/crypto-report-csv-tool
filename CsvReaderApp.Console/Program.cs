@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 
 var configuration = ConfigurationSetup();
 
-string directory = configuration.GetSection("AppSettings").GetValue<string>("Directory") ?? "C:\\Users\\nmoncheira\\Downloads";
+string directory = configuration.GetSection("AppSettings").GetValue<string>("Directory") ?? "C:\\Users\\Nuno\\Downloads";
 string fileName = configuration.GetSection("AppSettings").GetValue<string>("FileName") ?? "binance_report_2021.csv";
 
 string filePath = Path.GetFullPath($"{directory}{Path.DirectorySeparatorChar}{fileName}");

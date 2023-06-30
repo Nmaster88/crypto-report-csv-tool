@@ -39,9 +39,29 @@ namespace CsvReaderApp.Services
             // Iterate over the elements
             while ((bool)moveNextMethod.Invoke(enumerator, null))
             {
-                object currentItem = currentProperty.GetValue(enumerator);
-                // Process each item
-                Console.WriteLine(currentItem);
+                GetPropertiesOfObject(currentProperty, enumerator);
+            }
+        }
+
+        private static void GetPropertiesOfObject(PropertyInfo currentProperty, object enumerator)
+        {
+            object currentItem = currentProperty.GetValue(enumerator);
+            // Get the type of the object
+            Type objectType = enumerator.GetType();
+
+            // Get the type of the current item
+            Type currentItemType = currentItem.GetType();
+
+            // Get all public properties of the current item
+            PropertyInfo[] properties = currentItemType.GetProperties();
+
+            // Iterate over each property and print its value
+            foreach (PropertyInfo property in properties)
+            {
+                object propertyValue = property.GetValue(currentItem);
+
+                // Process each property value
+                Console.WriteLine($"{property.Name}: {propertyValue}");
             }
         }
     }
