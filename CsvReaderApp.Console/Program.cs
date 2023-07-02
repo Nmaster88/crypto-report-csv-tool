@@ -9,7 +9,9 @@ var configuration = ConfigurationSetup();
 string directory = configuration.GetSection("AppSettings").GetValue<string>("Directory") ?? "C:\\Users\\Nuno\\Downloads";
 string fileName = configuration.GetSection("AppSettings").GetValue<string>("FileName") ?? "binance_report_2021.csv";
 
-string filePath = Path.GetFullPath($"{directory}{Path.DirectorySeparatorChar}{fileName}");
+Console.WriteLine("What is the Path for the file? Leave empty to use app settings value.");
+string inputFileName = Console.ReadLine();
+string filePath = !string.IsNullOrEmpty(inputFileName) ? inputFileName : Path.GetFullPath($"{directory}{Path.DirectorySeparatorChar}{fileName}");
 
 
 IReader reader = new CsvReaderService();

@@ -12,12 +12,38 @@ namespace CsvReaderApp.Services
                 // T is of type List<T> or its derived types
                 Console.WriteLine("T is of type List<T> or its derived types.");
 
-                IterateGenericType(report, type);
+                IterateGenericTypeRead(report, type);
             }
             else
             {
                 // T is not of type List<T> or its derived types
                 Console.WriteLine("T is not of type List<T> or its derived types.");
+            }
+        }
+
+        private static void IterateGenericTypeRead<T>(T report, Type type)
+        {
+            // Get the IEnumerable<T> interface
+            Type enumerableType = typeof(List<>).MakeGenericType(type.GetGenericArguments());
+
+            // Check if the report object implements IEnumerable<T>
+            if (enumerableType.IsAssignableFrom(report.GetType()))
+            {
+                // Get the GetEnumerator() method
+                MethodInfo getEnumeratorMethod = enumerableType.GetMethod("GetEnumerator");
+
+                // Invoke the GetEnumerator() method to get the enumerator
+                object enumerator = getEnumeratorMethod.Invoke(report, null);
+
+                // Get the MoveNext() method and the Current property
+                MethodInfo moveNextMethod = enumerator.GetType().GetMethod("MoveNext");
+                PropertyInfo currentProperty = enumerator.GetType().GetProperty("Current");
+                _ = (bool)moveNextMethod.Invoke(enumerator, null);
+                GetPropertiesOfObject(currentProperty, enumerator);
+            }
+            else
+            {
+                Console.WriteLine("The provided object is not an IEnumerable<T>.");
             }
         }
 
