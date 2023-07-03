@@ -143,7 +143,6 @@ namespace CsvReaderApp.Services
             accountReportResult.Operation = binanceReport.Operation;
             accountReportResult.Coin = binanceReport.Coin;
             accountReportResult.Change = decimal.Parse(binanceReport.Change, NumberStyles.Float | NumberStyles.AllowExponent, CultureInfo.InvariantCulture);
-            accountReportResult.Remark = binanceReport.Remark;
 
             var element = BinanceReportResultsByAccount?.FirstOrDefault(elem => elem.ContainsKey(binanceReport.Account));
             if (element != null)
@@ -165,7 +164,7 @@ namespace CsvReaderApp.Services
             Console.WriteLine($"For the {key} we have the following results:");
             foreach (var binanceReportResult in binanceReportResults)
             {
-                Console.WriteLine($"| {binanceReportResult.Coin} | {binanceReportResult.Operation} | {binanceReportResult.Remark} | {binanceReportResult.Change} |");
+                Console.WriteLine($"| {binanceReportResult.Coin} | {binanceReportResult.Operation} | {binanceReportResult.Change} |");
             }
         }
     }

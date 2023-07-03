@@ -21,7 +21,7 @@ namespace CsvReaderApp.Services
             }
         }
 
-        private static void IterateGenericTypeRead<T>(T report, Type type)
+        private void IterateGenericTypeRead<T>(T report, Type type)
         {
             // Get the IEnumerable<T> interface
             Type enumerableType = typeof(List<>).MakeGenericType(type.GetGenericArguments());
@@ -47,7 +47,7 @@ namespace CsvReaderApp.Services
             }
         }
 
-        private static void IterateGenericType<T>(T report, Type type)
+        private void IterateGenericType<T>(T report, Type type)
         {
             // Get the IEnumerable<T> interface
             Type enumerableType = typeof(IEnumerable<>).MakeGenericType(type.GetGenericArguments());
@@ -79,13 +79,15 @@ namespace CsvReaderApp.Services
             // Get all public properties of the current item
             PropertyInfo[] properties = currentItemType.GetProperties();
 
+            Console.WriteLine($"Properties of the class {currentItemType.Name}:");
+
             // Iterate over each property and print its value
             foreach (PropertyInfo property in properties)
             {
                 object propertyValue = property.GetValue(currentItem);
 
                 // Process each property value
-                Console.WriteLine($"{property.Name}: {propertyValue}");
+                Console.WriteLine($"Name: {property.Name} | Type: {property.PropertyType}");
             }
         }
     }
