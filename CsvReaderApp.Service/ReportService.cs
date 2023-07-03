@@ -4,7 +4,7 @@ namespace CsvReaderApp.Services
 {
     public class ReportService
     {
-        public void Execute<T>(T report) 
+        public void Execute<T>(T reportOrigin) 
         {
             Type type = typeof(T);
             if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
@@ -12,12 +12,29 @@ namespace CsvReaderApp.Services
                 // T is of type List<T> or its derived types
                 Console.WriteLine("T is of type List<T> or its derived types.");
 
-                IterateGenericTypeRead(report, type);
+                IterateGenericTypeRead(reportOrigin, type);
             }
             else
             {
                 // T is not of type List<T> or its derived types
                 Console.WriteLine("T is not of type List<T> or its derived types.");
+            }
+        }
+
+        public void Execute<TI,TO>(TI reportOrigin, TO reportDestiny)
+        {
+            Type type = typeof(TI);
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
+            {
+                // T is of type List<T> or its derived types
+                Console.WriteLine("TI is of type List<TI> or its derived types.");
+
+                IterateGenericTypeRead(reportOrigin, type);
+            }
+            else
+            {
+                // T is not of type List<T> or its derived types
+                Console.WriteLine("TI is not of type List<TI> or its derived types.");
             }
         }
 
