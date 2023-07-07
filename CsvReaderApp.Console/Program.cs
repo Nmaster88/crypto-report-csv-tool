@@ -22,7 +22,9 @@ var binanceReport = readerService.ReadRecords<BinanceReportEntry>(filePath);
 //BinanceReportService binanceReportService = new BinanceReportService();
 //binanceReportService.Execute(binanceReport);
 ConvertService binanceReportService = new ConvertService();
-binanceReportService.Execute(binanceReport);
+//binanceReportService.Execute(binanceReport);
+List<AccountReportResult> resultsDestiny = new List<AccountReportResult>();
+binanceReportService.ExecuteAssignment(binanceReport, resultsDestiny);
 
 static IConfiguration ConfigurationSetup()
 {
