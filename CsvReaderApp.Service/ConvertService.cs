@@ -57,7 +57,7 @@ namespace CsvReaderApp.Services
         }
 
         /// <summary>
-        /// Simplify this method
+        /// TODO: Simplify this method- what we want is just to read the properties of the class. It doesn't matter if the object is empty (0 results)
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="report"></param>
