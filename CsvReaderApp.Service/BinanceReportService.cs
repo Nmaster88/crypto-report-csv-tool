@@ -1,4 +1,5 @@
-﻿using CsvReaderApp.Models;
+﻿using CsvReaderApp.Binance.Models;
+using CsvReaderApp.Models;
 using System.Globalization;
 
 namespace CsvReaderApp.Services

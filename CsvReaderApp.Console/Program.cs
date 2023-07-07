@@ -1,5 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using Common.Services;
+using CsvReaderApp.Binance.Models;
 using CsvReaderApp.Models;
 using CsvReaderApp.Services;
 using Microsoft.Extensions.Configuration;
@@ -20,7 +21,7 @@ var binanceReport = readerService.ReadRecords<BinanceReportEntry>(filePath);
 
 //BinanceReportService binanceReportService = new BinanceReportService();
 //binanceReportService.Execute(binanceReport);
-ReportService binanceReportService = new ReportService();
+ConvertService binanceReportService = new ConvertService();
 binanceReportService.Execute(binanceReport);
 
 static IConfiguration ConfigurationSetup()

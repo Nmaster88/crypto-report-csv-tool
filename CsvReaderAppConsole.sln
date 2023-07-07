@@ -15,7 +15,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{5E15C8B7
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonServicesTests", "CommonServicesTests\CommonServicesTests.csproj", "{E7EE8B22-4957-4194-A52B-672A5F58B615}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsvReaderAppServicesTests", "CsvReaderAppServicesTests\CsvReaderAppServicesTests.csproj", "{2070AE18-B66F-41A8-B82A-2E09EF018A78}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CsvReaderAppServicesTests", "CsvReaderAppServicesTests\CsvReaderAppServicesTests.csproj", "{2070AE18-B66F-41A8-B82A-2E09EF018A78}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsvReaderApp.Binance.Models", "CsvReaderApp.Binance.Models\CsvReaderApp.Binance.Models.csproj", "{0904D718-3FB5-46F7-B0C9-85D7BE4D42E6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +49,10 @@ Global
 		{2070AE18-B66F-41A8-B82A-2E09EF018A78}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2070AE18-B66F-41A8-B82A-2E09EF018A78}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2070AE18-B66F-41A8-B82A-2E09EF018A78}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0904D718-3FB5-46F7-B0C9-85D7BE4D42E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0904D718-3FB5-46F7-B0C9-85D7BE4D42E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0904D718-3FB5-46F7-B0C9-85D7BE4D42E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0904D718-3FB5-46F7-B0C9-85D7BE4D42E6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

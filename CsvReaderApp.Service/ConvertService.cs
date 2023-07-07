@@ -1,8 +1,9 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 
 namespace CsvReaderApp.Services
 {
-    public class ReportService
+    public class ConvertService
     {
         public void Execute<T>(T reportOrigin) 
         {
@@ -21,21 +22,25 @@ namespace CsvReaderApp.Services
             }
         }
 
-        public void Execute<TI,TO>(TI reportOrigin, TO reportDestiny)
+        public void ExecuteAssignment<TI,TO>(TI reportOrigin, TO reportDestiny)
         {
-            Type type = typeof(TI);
-            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
+            Type typeI = typeof(TI);
+            Type typeO = typeof(TO);
+            if (TypeIsList(typeI) && TypeIsList(typeO))
             {
-                // T is of type List<T> or its derived types
-                Console.WriteLine("TI is of type List<TI> or its derived types.");
-
-                IterateGenericTypeRead(reportOrigin, type);
+                IterateGenericTypeRead(reportOrigin, typeI);
+                IterateGenericTypeRead(reportOrigin, typeO);
             }
             else
             {
-                // T is not of type List<T> or its derived types
-                Console.WriteLine("TI is not of type List<TI> or its derived types.");
+                Console.WriteLine($"{typeI.Name} or {typeO.Name} is not of type List<> or its derived types.");
             }
+        }
+
+
+        private bool TypeIsList(Type type)
+        {
+            return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>);
         }
 
         private void IterateGenericTypeRead<T>(T report, Type type)
