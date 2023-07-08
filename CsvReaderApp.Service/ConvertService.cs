@@ -67,35 +67,17 @@ namespace CsvReaderApp.Services
 
             if (TypeIsList(type))
             {
-                // Get the IEnumerable<T> interface
-                Type enumerableType = typeof(List<>).MakeGenericType(type.GetGenericArguments());
+                type = typeof(List<>).MakeGenericType(report.GetType().GetGenericArguments()[0]);
 
-                // Check if the report object implements IEnumerable<T>
-                if (enumerableType.IsAssignableFrom(report.GetType()))
+                PropertyInfo[] properties = type.GetGenericArguments()[0].GetProperties();
+
+                foreach (PropertyInfo property in properties)
                 {
-                    // Get the GetEnumerator() method
-                    MethodInfo getEnumeratorMethod = enumerableType.GetMethod("GetEnumerator");
-                    object enumerator = getEnumeratorMethod.Invoke(report, null);
-                    MethodInfo moveNextMethod = enumerator.GetType().GetMethod("MoveNext");
-                    PropertyInfo currentProperty = enumerator.GetType().GetProperty("Current");
-                    _ = (bool)moveNextMethod.Invoke(enumerator, null);
-                    object currentItem = currentProperty.GetValue(enumerator);
-                    Type currentItemType = currentItem.GetType();
-                    PropertyInfo[] properties = currentItemType.GetProperties();
-                    Console.WriteLine($"Properties of the class {currentItemType.Name}:");
-                    foreach (PropertyInfo property in properties)
-                    {
-                        // Process each property value
-                        Console.WriteLine($"Name: {property.Name} | Type: {property.PropertyType}");
-                        ObjectProperty objProperty = new ObjectProperty();
-                        objProperty.Name = property.Name;
-                        objProperty.Type = property.PropertyType.Name;
-                        ObjectProperties.Add(objProperty);
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("The provided object is not an IEnumerable<T>.");
+                    Console.WriteLine($"Name: {property.Name} | Type: {property.PropertyType}");
+                    ObjectProperty objProperty = new ObjectProperty();
+                    objProperty.Name = property.Name;
+                    objProperty.Type = property.PropertyType.Name;
+                    ObjectProperties.Add(objProperty);
                 }
             }
             else
