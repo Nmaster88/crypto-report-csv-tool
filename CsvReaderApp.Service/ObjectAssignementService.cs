@@ -86,8 +86,23 @@ namespace CsvReaderApp.Services
 
             Console.WriteLine($"from the class {typeI} properties map each one of them to the class {typeO}");
 
-            foreach(ObjectProperty property in ObjectPropertiesO) {
-                Console.WriteLine($"For property name: {property.Name} with type: {property.Type} assign a property of the input object by name.");
+            foreach(ObjectProperty propertyO in ObjectPropertiesO) {
+                Console.WriteLine($"{propertyO.Name}");
+                ObjectProperty propertyI = null;
+                do
+                {
+                    string propName = Console.ReadLine();
+                    propertyI = ObjectPropertiesI.Find(x => x.Name == propName);
+                    if (propertyI?.Type == propertyO?.Type)
+                    {
+                        Console.WriteLine("Prop is equal");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Prop is not equal");
+                    }
+                }
+                while (propertyI == null);
             }
         }
     }
