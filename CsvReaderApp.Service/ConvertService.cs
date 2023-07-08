@@ -10,8 +10,8 @@ namespace CsvReaderApp.Services
         
         private class ObjectProperty
         {
-            public string Name { get; set; }
-            public string Type { get; set; }
+            public required string Name { get; set; }
+            public required string Type { get; set; }
 
         }
         
@@ -72,9 +72,11 @@ namespace CsvReaderApp.Services
                 foreach (PropertyInfo property in properties)
                 {
                     Console.WriteLine($"Name: {property.Name} | Type: {property.PropertyType}");
-                    ObjectProperty objProperty = new ObjectProperty();
-                    objProperty.Name = property.Name;
-                    objProperty.Type = property.PropertyType.Name;
+                    ObjectProperty objProperty = new ObjectProperty()
+                    { 
+                        Name = property.Name,
+                        Type = property.PropertyType.Name
+                    };
                     ObjectProperties.Add(objProperty);
                 }
             }
