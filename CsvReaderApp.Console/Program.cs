@@ -19,12 +19,9 @@ IReader reader = new CsvReaderService();
 ReaderService readerService = new ReaderService(reader);
 var binanceReport = readerService.ReadRecords<BinanceReportEntry>(filePath);
 
-//BinanceReportService binanceReportService = new BinanceReportService();
-//binanceReportService.Execute(binanceReport);
 ObjectAssignementService<List<BinanceReportEntry>, List<AccountReportResult>> binanceReportService = new ObjectAssignementService<List<BinanceReportEntry>, List<AccountReportResult>>();
-//binanceReportService.Execute(binanceReport);
-List<AccountReportResult> resultsDestiny = new List<AccountReportResult>();
-binanceReportService.Execute(binanceReport, resultsDestiny);
+binanceReportService.Setup();
+binanceReportService.Mapping();
 
 static IConfiguration ConfigurationSetup()
 {

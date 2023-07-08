@@ -8,8 +8,6 @@ namespace CsvReaderApp.Services
         //TODO: console.writeLine or readLine should instead be replaced by DI. So that its generic.
         private List<ObjectProperty> ObjectPropertiesI = new List<ObjectProperty>();
         private List<ObjectProperty> ObjectPropertiesO = new List<ObjectProperty>();
-        private TI ClassInput { get; set; }
-        private TO ClassOuput { get; set; }
         
         private class ObjectProperty
         {
@@ -77,7 +75,20 @@ namespace CsvReaderApp.Services
 
         public void Mapping()
         {
+            if(ObjectPropertiesI?.Count == 0 || ObjectPropertiesO?.Count == 0)
+            {
+                Console.WriteLine("Please run setup first.");
+                return;
+            }
             Console.WriteLine("Proceed with the mapping between output object and input object");
+            Type typeI = typeof(TI);
+            Type typeO = typeof(TO);
+
+            Console.WriteLine($"from the class {typeI} properties map each one of them to the class {typeO}");
+
+            foreach(ObjectProperty property in ObjectPropertiesO) {
+                Console.WriteLine($"For property name: {property.Name} with type: {property.Type} assign a property of the input object by name.");
+            }
         }
     }
 }
