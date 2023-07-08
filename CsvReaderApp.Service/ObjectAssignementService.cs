@@ -3,10 +3,13 @@ using System.Reflection;
 
 namespace CsvReaderApp.Services
 {
-    public class ConvertService
+    public class ObjectAssignementService<TI, TO>
     {
+        //TODO: console.writeLine or readLine should instead be replaced by DI. So that its generic.
         private List<ObjectProperty> ObjectPropertiesI = new List<ObjectProperty>();
         private List<ObjectProperty> ObjectPropertiesO = new List<ObjectProperty>();
+        private TI ClassInput { get; set; }
+        private TO ClassOuput { get; set; }
         
         private class ObjectProperty
         {
@@ -14,25 +17,24 @@ namespace CsvReaderApp.Services
             public required string Type { get; set; }
         }
         
-        public void ExecuteAssignment<TI,TO>(TI reportOrigin, TO reportDestiny)
+        public void Setup()
         {
-            GenericInputTypeRead(reportOrigin);
-            GenericOutputTypeRead(reportDestiny);
+            GenericInputTypeRead<TI>();
+            GenericOutputTypeRead<TO>();
         }
-
 
         private bool TypeIsList(Type type)
         {
             return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>);
         }
 
-        private void GenericInputTypeRead<T>(T reportOrigin)
+        private void GenericInputTypeRead<T>()
         {
             ObjectPropertiesI = new List<ObjectProperty>();
             GenericListTypeRead<T>(ObjectPropertiesI);
         }
 
-        private void GenericOutputTypeRead<T>(T reportOrigin)
+        private void GenericOutputTypeRead<T>()
         {
             ObjectPropertiesO = new List<ObjectProperty>();
             GenericListTypeRead<T>(ObjectPropertiesO);
@@ -71,6 +73,11 @@ namespace CsvReaderApp.Services
                 Console.WriteLine($"{type.Name} is not of type List<> or its derived types.");
             }
 
+        }
+
+        public void Mapping()
+        {
+            Console.WriteLine("Proceed with the mapping between output object and input object");
         }
     }
 }

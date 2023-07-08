@@ -21,10 +21,10 @@ var binanceReport = readerService.ReadRecords<BinanceReportEntry>(filePath);
 
 //BinanceReportService binanceReportService = new BinanceReportService();
 //binanceReportService.Execute(binanceReport);
-ConvertService binanceReportService = new ConvertService();
+ObjectAssignementService<List<BinanceReportEntry>, List<AccountReportResult>> binanceReportService = new ObjectAssignementService<List<BinanceReportEntry>, List<AccountReportResult>>();
 //binanceReportService.Execute(binanceReport);
 List<AccountReportResult> resultsDestiny = new List<AccountReportResult>();
-binanceReportService.ExecuteAssignment(binanceReport, resultsDestiny);
+binanceReportService.Execute(binanceReport, resultsDestiny);
 
 static IConfiguration ConfigurationSetup()
 {
