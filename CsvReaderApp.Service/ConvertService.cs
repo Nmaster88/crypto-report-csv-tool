@@ -47,28 +47,26 @@ namespace CsvReaderApp.Services
         private void GenericInputTypeRead<T>(T reportOrigin)
         {
             ObjectPropertiesI = new List<ObjectProperty>();
-            GenericTypeRead<T>(reportOrigin, ObjectPropertiesI);
+            GenericListTypeRead<T>(ObjectPropertiesI);
         }
 
         private void GenericOutputTypeRead<T>(T reportOrigin)
         {
             ObjectPropertiesO = new List<ObjectProperty>();
-            GenericTypeRead<T>(reportOrigin, ObjectPropertiesO);
+            GenericListTypeRead<T>(ObjectPropertiesO);
         }
 
         /// <summary>
-        /// TODO: Simplify this method- what we want is just to read the properties of the class. It doesn't matter if the object is empty (0 results)
+        /// From a generic type read its properties and assign it to an object that will contain its metadata
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="report"></param>
-        private void GenericTypeRead<T>(T report, List<ObjectProperty> ObjectProperties)
+        /// <param name="ObjectProperties"></param>
+        private void GenericListTypeRead<T>(List<ObjectProperty> ObjectProperties)
         {
             Type type = typeof(T);
 
             if (TypeIsList(type))
             {
-                type = typeof(List<>).MakeGenericType(report.GetType().GetGenericArguments()[0]);
-
                 PropertyInfo[] properties = type.GetGenericArguments()[0].GetProperties();
 
                 foreach (PropertyInfo property in properties)
