@@ -104,11 +104,18 @@ namespace CsvReaderApp.Services
                     else
                     {
                         //TODO: In this case it should be possible to do a conversion?
+                        //check both type of Input and Output and work on conversion
+                        CheckTypesAndApplyConvertion(propertyI?.Type, propertyO?.Type);
                         Console.WriteLine("The type of the property is not the same");
                     }
                 }
                 while (propertyI == null);
             }
+        }
+
+        private void CheckTypesAndApplyConvertion(string type1, string type2)
+        {
+            throw new NotImplementedException();
         }
     }
 }
