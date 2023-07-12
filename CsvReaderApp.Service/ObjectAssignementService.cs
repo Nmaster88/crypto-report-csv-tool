@@ -87,19 +87,24 @@ namespace CsvReaderApp.Services
             Console.WriteLine($"from the class {typeI} properties map each one of them to the class {typeO}");
 
             foreach(ObjectProperty propertyO in ObjectPropertiesO) {
-                Console.WriteLine($"{propertyO.Name}");
+                Console.Write($"{propertyO.Name} match with: ");
                 ObjectProperty propertyI = null;
                 do
                 {
                     string propName = Console.ReadLine();
                     propertyI = ObjectPropertiesI.Find(x => x.Name == propName);
-                    if (propertyI?.Type == propertyO?.Type)
+                    if(propertyI == null)
                     {
-                        Console.WriteLine("Prop is equal");
+                        Console.WriteLine("A property with that name was not found.");
+                    }
+                    else if (propertyI?.Type == propertyO?.Type)
+                    {
+                        Console.WriteLine("The type of the property is the same between them");
                     }
                     else
                     {
-                        Console.WriteLine("Prop is not equal");
+                        //TODO: In this case it should be possible to do a conversion?
+                        Console.WriteLine("The type of the property is not the same");
                     }
                 }
                 while (propertyI == null);
