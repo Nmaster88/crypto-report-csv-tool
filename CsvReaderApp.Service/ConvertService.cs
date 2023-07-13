@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,32 @@ namespace CsvReaderApp.Services
             _objectAssignementService = objectAssignementService ?? throw new ArgumentNullException(nameof(ObjectAssignementService<TI, TO>));
         }
 
+        public void Convert(TI input, TO output) 
+        {
+            if (typeof(TI).IsGenericType && typeof(TI).GetGenericTypeDefinition() == typeof(List<>))
+            {
+                var inputList = input as IEnumerable;
+                if (inputList != null)
+                {
+                    foreach (object element in inputList)
+                    {
+                        //foreach(var property in element)
+                        //{
 
+                        //}
+                        var objPropertyMatch = _objectAssignementService.ObjectPropertiesIOMatch.Find(x => x.PropertyInput.Name == element);
+                    }
+                }
+            }
+            else
+            {
+
+            }
+        }
+
+        private void AssignToElement() 
+        { 
+        
+        }
     }
 }
