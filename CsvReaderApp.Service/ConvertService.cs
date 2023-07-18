@@ -13,6 +13,13 @@ namespace CsvReaderApp.Services
 
         public void Convert(TI input, TO output)
         {
+            Type typeElementO = null;
+            if (typeof(TO).IsGenericType && typeof(TO).GetGenericTypeDefinition() == typeof(List<>))
+            {
+                Type typeListO = typeof(TO);
+                typeElementO = typeListO.GetGenericArguments()[0];
+            }
+
             //TO if its a list we need to get what is the element of the list so that we can use it to create objects to populate the list
             //if it is already the class its easier
             if (typeof(TI).IsGenericType && typeof(TI).GetGenericTypeDefinition() == typeof(List<>))
@@ -22,6 +29,8 @@ namespace CsvReaderApp.Services
                 {
                     foreach (object element in inputList)
                     {
+                        dynamic instance = Activator.CreateInstance(typeElementO); //creating a new instance of the output class
+
                         Type objectElementType = element.GetType();
 
                         // Get all properties of the object type
@@ -32,6 +41,19 @@ namespace CsvReaderApp.Services
                             if (objPropertyMatch != null)
                             {
                                 Console.WriteLine("property found.");
+                                
+
+                                // Get all properties of the object type Output
+                                PropertyInfo[] propertiesO = typeElementO.GetProperties();
+
+                                PropertyInfo propertyOMatched = propertiesO.FirstOrDefault(x => x.Name == objPropertyMatch.PropertyOutput.Name);
+
+                                if(propertyOMatched != null)
+                                {
+                                    var value = property.GetValue(element);
+                                    //TODO: need to work when the type is different for Input and Output
+                                    instance.GetType().GetProperty(propertyOMatched.Name)?.SetValue(instance, value);
+                                }
                             }
                         }
                     }
@@ -39,7 +61,7 @@ namespace CsvReaderApp.Services
             }
             else
             {
-
+                throw new Exception($"{typeof(TI)} is not a valid type. It should be a list");
             }
         }
 
