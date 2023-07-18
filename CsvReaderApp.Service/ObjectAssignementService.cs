@@ -1,7 +1,4 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
-//using static CsvReaderApp.Services.ObjectAssignementService<TI, TO>;
+﻿using System.Reflection;
 
 namespace CsvReaderApp.Services
 {
@@ -11,7 +8,7 @@ namespace CsvReaderApp.Services
         public List<ObjectProperty> ObjectPropertiesI = new List<ObjectProperty>();
         public List<ObjectProperty> ObjectPropertiesO = new List<ObjectProperty>();
         public List<ObjectPropertiesMatch> ObjectPropertiesIOMatch = new List<ObjectPropertiesMatch>();
-        
+
         public class ObjectProperty
         {
             public required string Name { get; set; }
@@ -71,14 +68,14 @@ namespace CsvReaderApp.Services
             {
                 Type typeOfList = type.GetGenericArguments()[0];
                 string typeName = typeOfList.Name;
-                Console.WriteLine($"Class name: {typeName}",typeName);
+                Console.WriteLine($"Class name: {typeName}", typeName);
                 PropertyInfo[] properties = typeOfList.GetProperties();
 
                 foreach (PropertyInfo property in properties)
                 {
                     Console.WriteLine($"Name: {property.Name} | Type: {property.PropertyType}");
                     ObjectProperty objProperty = new ObjectProperty()
-                    { 
+                    {
                         Name = property.Name,
                         Type = property,
                         TypeName = property.PropertyType.Name
@@ -96,7 +93,7 @@ namespace CsvReaderApp.Services
 
         public void Mapping()
         {
-            if(ObjectPropertiesI?.Count == 0 || ObjectPropertiesO?.Count == 0)
+            if (ObjectPropertiesI?.Count == 0 || ObjectPropertiesO?.Count == 0)
             {
                 Console.WriteLine("Please run setup first.");
                 return;
@@ -107,7 +104,8 @@ namespace CsvReaderApp.Services
 
             Console.WriteLine($"from the class {typeI} properties map each one of them to the class {typeO}");
 
-            foreach(ObjectProperty propertyO in ObjectPropertiesO) {
+            foreach (ObjectProperty propertyO in ObjectPropertiesO)
+            {
                 ObjectProperty propertyI = null;
                 do
                 {
@@ -151,7 +149,7 @@ namespace CsvReaderApp.Services
             Type typeI = infoI.PropertyType;
             Type typeO = infoO.PropertyType;
 
-            if(typeI == typeof(int) && typeO == typeof(string))
+            if (typeI == typeof(int) && typeO == typeof(string))
             {
                 return ObjectConversion.IntToString;
             }
@@ -180,8 +178,9 @@ namespace CsvReaderApp.Services
             return value.ToString();
         }
 
-        private string DecimalConvertToString(decimal value) {  
-            return value.ToString(); 
+        private string DecimalConvertToString(decimal value)
+        {
+            return value.ToString();
         }
 
         private decimal StringConvertToDecimal(string value)
