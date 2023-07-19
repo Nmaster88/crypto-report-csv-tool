@@ -19,6 +19,7 @@ IReader reader = new CsvReaderService();
 ReaderService readerService = new ReaderService(reader);
 var binanceReport = readerService.ReadRecords<BinanceReportEntry>(filePath);
 
+//TODO: study the possiblity to replace ObjectAssignementService and ConvertService with AutoMapper
 ObjectAssignementService<List<BinanceReportEntry>, List<AccountReportResult>> objectAssignmentService = new ObjectAssignementService<List<BinanceReportEntry>, List<AccountReportResult>>();
 objectAssignmentService.Setup();
 objectAssignmentService.Mapping();
@@ -32,6 +33,5 @@ static IConfiguration ConfigurationSetup()
     var builder = new ConfigurationBuilder()
         .SetBasePath(Directory.GetCurrentDirectory())
         .AddJsonFile($"appsettings.json", true, true);
-    //.AddJsonFile($"appsettings.{EnvironmentName}.json", optional: true, reloadOnChange: true)
     return builder.Build();
 }

@@ -3,6 +3,13 @@ using System.Reflection;
 
 namespace CsvReaderApp.Services
 {
+    /// <summary>
+    /// Has properties that will contain information about an input class and output class
+    /// and the mapping between properties of those 2 classes
+    /// the intent is to provide metadata that can be used for mapping by another class
+    /// </summary>
+    /// <typeparam name="TI"></typeparam>
+    /// <typeparam name="TO"></typeparam>
     public class ObjectAssignementService<TI, TO>
     {
         //TODO: console.writeLine or readLine should instead be replaced by DI. So that its generic.
@@ -21,7 +28,7 @@ namespace CsvReaderApp.Services
         {
             public ObjectProperty PropertyInput { get; set; }
             public ObjectProperty PropertyOutput { get; set; }
-            public ObjectConversion objectConversion { get; set; }
+            public ObjectConversion ObjectConversion { get; set; }
         }
 
         public void Setup()
@@ -132,7 +139,7 @@ namespace CsvReaderApp.Services
             ObjectPropertiesMatch objectPropertiesMatch = new ObjectPropertiesMatch();
             objectPropertiesMatch.PropertyInput = propertyI;
             objectPropertiesMatch.PropertyOutput = propertyO;
-            objectPropertiesMatch.objectConversion = objectConversion;
+            objectPropertiesMatch.ObjectConversion = objectConversion;
             ObjectPropertiesIOMatch.Add(objectPropertiesMatch);
         }
 

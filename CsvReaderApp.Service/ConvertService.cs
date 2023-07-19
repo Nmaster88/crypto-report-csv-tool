@@ -4,6 +4,11 @@ using System.Reflection;
 
 namespace CsvReaderApp.Services
 {
+    /// <summary>
+    /// ConvertService uses ObjectAssignmentService properties to do the mapping between an input object to an output object that contains a list
+    /// </summary>
+    /// <typeparam name="TI"></typeparam>
+    /// <typeparam name="TO"></typeparam>
     public class ConvertService<TI, TO>
     {
         private readonly ObjectAssignementService<TI, TO> _objectAssignementService;
@@ -52,7 +57,7 @@ namespace CsvReaderApp.Services
                                 if(propertyOMatched != null)
                                 {
                                     var value = property.GetValue(element);
-                                    if (objPropertyMatch.objectConversion == ObjectConversion.NoConversion)
+                                    if (objPropertyMatch.ObjectConversion == ObjectConversion.NoConversion)
                                     {
                                         instance.GetType().GetProperty(propertyOMatched.Name)?.SetValue(instance, value);
                                     }
