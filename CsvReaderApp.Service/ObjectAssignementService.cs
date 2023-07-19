@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using CsvReaderApp.Models;
+using System.Reflection;
 
 namespace CsvReaderApp.Services
 {
@@ -21,15 +22,6 @@ namespace CsvReaderApp.Services
             public ObjectProperty PropertyInput { get; set; }
             public ObjectProperty PropertyOutput { get; set; }
             public ObjectConversion objectConversion { get; set; }
-        }
-
-        public enum ObjectConversion
-        {
-            NoConversion = 0,
-            StringToInt = 1,
-            StringToDecimal = 2,
-            IntToString = 3,
-            DecimalToString = 4,
         }
 
         public void Setup()
@@ -169,43 +161,6 @@ namespace CsvReaderApp.Services
                 return ObjectConversion.StringToInt;
             }
             throw new NotImplementedException();
-        }
-
-        //TODO: code method that reads the value of a property and assigns it to the right method to convert
-
-        private string IntConvertToString(int value)
-        {
-            return value.ToString();
-        }
-
-        private string DecimalConvertToString(decimal value)
-        {
-            return value.ToString();
-        }
-
-        private decimal StringConvertToDecimal(string value)
-        {
-            decimal result;
-
-            if (decimal.TryParse(value, out result))
-            {
-                return result;
-            }
-
-            throw new ArgumentException("Invalid decimal value.");
-        }
-
-        private decimal StringConvertToInt(string value)
-        {
-            int intValue;
-            if (int.TryParse(value, out intValue))
-            {
-                return (decimal)intValue; // Successful conversion to int, cast to decimal
-            }
-
-            // Handle conversion failure or invalid input
-            // You can throw an exception, return a default value, or handle it based on your requirements
-            throw new ArgumentException("Invalid integer value.");
         }
     }
 }

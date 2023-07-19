@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using CsvReaderApp.Models;
+using System.Collections;
 using System.Reflection;
 
 namespace CsvReaderApp.Services
@@ -51,8 +52,15 @@ namespace CsvReaderApp.Services
                                 if(propertyOMatched != null)
                                 {
                                     var value = property.GetValue(element);
+                                    if (objPropertyMatch.objectConversion == ObjectConversion.NoConversion)
+                                    {
+                                        instance.GetType().GetProperty(propertyOMatched.Name)?.SetValue(instance, value);
+                                    }
+                                    else
+                                    {
+                                        throw new NotImplementedException();
+                                    }
                                     //TODO: need to work when the type is different for Input and Output
-                                    instance.GetType().GetProperty(propertyOMatched.Name)?.SetValue(instance, value);
                                 }
                             }
                         }
@@ -67,7 +75,45 @@ namespace CsvReaderApp.Services
 
         private void AssignToElement()
         {
+            throw new NotImplementedException();
+        }
 
+        //TODO: code method that reads the value of a property and assigns it to the right method to convert.
+        // using enum is find but doesn't follow best practices of OOP. we should use a design patter for this.
+
+        private string IntConvertToString(int value)
+        {
+            return value.ToString();
+        }
+
+        private string DecimalConvertToString(decimal value)
+        {
+            return value.ToString();
+        }
+
+        private decimal StringConvertToDecimal(string value)
+        {
+            decimal result;
+
+            if (decimal.TryParse(value, out result))
+            {
+                return result;
+            }
+
+            throw new ArgumentException("Invalid decimal value.");
+        }
+
+        private decimal StringConvertToInt(string value)
+        {
+            int intValue;
+            if (int.TryParse(value, out intValue))
+            {
+                return (decimal)intValue; // Successful conversion to int, cast to decimal
+            }
+
+            // Handle conversion failure or invalid input
+            // You can throw an exception, return a default value, or handle it based on your requirements
+            throw new ArgumentException("Invalid integer value.");
         }
     }
 }
