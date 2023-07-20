@@ -4,6 +4,7 @@ using System.Globalization;
 
 namespace CsvReaderApp.Services
 {
+    [Obsolete("Use AccountReportService")]
     public class BinanceReportService
     {
         public List<string> Operations { get; set; }
