@@ -9,7 +9,11 @@ namespace CsvReaderApp.Services
     }
     public class AccountReportService : IAccountReportService
     {
-        public AccountReportService() { }
+        private readonly ICommunication _communication;
+        public AccountReportService(ICommunication communication) 
+        {
+            _communication = communication;
+        }
 
         public void Report(List<AccountReportResult> accountReportResultList)
         {
@@ -32,10 +36,10 @@ namespace CsvReaderApp.Services
             var groupList = accountReportResultList.Where(x => x.Operation.Contains(value.Replace("_", " "))).GroupBy(c => c.Coin).Select(x => new { Coin = x.Key, Change = x.Sum(e => e.Change) });
             if (groupList != null && groupList.Count() > 0)
             {
-                Console.WriteLine($"Total {value} By coin:");
+                _communication.SendMessage($"Total {value} By coin:");
                 foreach (var accountReport in groupList)
                 {
-                    Console.WriteLine($"| {accountReport.Coin} | {accountReport.Change} |");
+                    _communication.SendMessage($"| {accountReport.Coin} | {accountReport.Change} |");
                 }
             }
         }

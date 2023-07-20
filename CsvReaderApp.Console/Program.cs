@@ -26,7 +26,7 @@ var binanceReport = readerService.ReadRecords<ReportEntry>(filePath);
 
 var destinationList = mapper.Map<List<AccountReportResult>>(binanceReport);
 
-AccountReportService accountReportService = new AccountReportService();
+AccountReportService accountReportService = new AccountReportService(new ConsoleCommunication());
 accountReportService.Report(destinationList);
 
 Console.ReadLine();
@@ -59,7 +59,8 @@ IServiceProvider ConfigureServices()
     });
 
     IMapper mapper = mapperConfig.CreateMapper();
-    services.AddSingleton(mapper);
+    services.AddSingleton(mapper)
+            .AddSingleton<ICommunication, ConsoleCommunication>();
 
     var serviceProvider = services.BuildServiceProvider();
     return serviceProvider;
