@@ -47,14 +47,14 @@ namespace CsvReaderApp.Services
                             if (objPropertyMatch != null)
                             {
                                 Console.WriteLine("property found.");
-                                
+
 
                                 // Get all properties of the object type Output
                                 PropertyInfo[] propertiesO = typeElementO.GetProperties();
 
                                 PropertyInfo propertyOMatched = propertiesO.FirstOrDefault(x => x.Name == objPropertyMatch.PropertyOutput.Name);
 
-                                if(propertyOMatched != null)
+                                if (propertyOMatched != null)
                                 {
                                     var value = property.GetValue(element);
                                     if (objPropertyMatch.ObjectConversion == ObjectConversion.NoConversion)

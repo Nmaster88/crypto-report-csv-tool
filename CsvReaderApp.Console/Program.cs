@@ -26,6 +26,9 @@ var binanceReport = readerService.ReadRecords<BinanceReportEntry>(filePath);
 
 var destinationList = mapper.Map<List<AccountReportResult>>(binanceReport);
 
+AccountReportService accountReportService = new AccountReportService();
+accountReportService.SplitByProperty(destinationList, "Account");
+
 Console.ReadLine();
 //TODO: study the possiblity to replace ObjectAssignementService and ConvertService with AutoMapper
 //ObjectAssignementService<List<BinanceReportEntry>, List<AccountReportResult>> objectAssignmentService = new ObjectAssignementService<List<BinanceReportEntry>, List<AccountReportResult>>();
