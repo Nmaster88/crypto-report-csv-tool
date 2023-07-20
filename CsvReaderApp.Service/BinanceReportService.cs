@@ -19,13 +19,13 @@ namespace CsvReaderApp.Services
             BinanceReportResultsByAccount = new List<Dictionary<string, List<AccountReportResult>>>();
         }
 
-        public void Execute(List<BinanceReportEntry> binanceReports)
+        public void Execute(List<ReportEntry> binanceReports)
         {
             AddReportToResults(binanceReports);
 
             foreach (var result in BinanceReportResultsByAccount.Where(x => x.ContainsKey(AccountEnum.Spot.ToString())))
             {
-                Console.WriteLine($"Total {OperationEnum.Deposit.ToString()} By coin:");
+                Console.WriteLine($"Total {Binance.Models.OperationEnum.Deposit.ToString()} By coin:");
 
                 var deposit = result[AccountEnum.Spot.ToString()].Where(x => x.Operation.Contains(OperationEnum.Deposit.ToString())).GroupBy(c => c.Coin).Select(x => new { Coin = x.Key, Change = x.Sum(e => e.Change) });
 
@@ -122,9 +122,9 @@ namespace CsvReaderApp.Services
             ProcessingBinanceReport();
         }
 
-        private void AddReportToResults(List<BinanceReportEntry> binanceReports)
+        private void AddReportToResults(List<ReportEntry> binanceReports)
         {
-            foreach (BinanceReportEntry binanceReport in binanceReports)
+            foreach (ReportEntry binanceReport in binanceReports)
             {
                 AddAccountReportResult(binanceReport);
             }
@@ -135,7 +135,7 @@ namespace CsvReaderApp.Services
             throw new NotImplementedException();
         }
 
-        private void AddAccountReportResult(BinanceReportEntry binanceReport)
+        private void AddAccountReportResult(ReportEntry binanceReport)
         {
             if (binanceReport == null)
                 return;

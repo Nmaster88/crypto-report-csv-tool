@@ -8,7 +8,7 @@ namespace CsvReaderApp.Console.Utils
     {
         public AutoMapperProfile()
         {
-            CreateMap<BinanceReportEntry, AccountReportResult>()
+            CreateMap<ReportEntry, AccountReportResult>()
                 .ForMember(dest => dest.Change, opt => opt.MapFrom(src => decimal.Parse(src.Change, NumberStyles.Float | NumberStyles.AllowExponent, CultureInfo.InvariantCulture)));
         }
     }

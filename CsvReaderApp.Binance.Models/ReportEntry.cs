@@ -1,6 +1,6 @@
 ﻿namespace CsvReaderApp.Binance.Models
 {
-    public class BinanceReportEntry
+    public class ReportEntry
     {
         public int User_ID { get; set; }
         public DateTime UTC_Time { get; set; }
