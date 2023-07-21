@@ -80,16 +80,33 @@ namespace CsvReaderApp.Services
                 return;
             }
 
-            string transactionBuy = OperationEnum.Transaction_Buy.ToString().Replace("_", " ");
-            string transactionSpend = OperationEnum.Transaction_Spend.ToString().Replace("_", " ");
-            string transactionRevenue = OperationEnum.Transaction_Revenue.ToString().Replace("_", " ");
-            string transactionSold = OperationEnum.Transaction_Sold.ToString().Replace("_", " ");
-            string fee = OperationEnum.Fee.ToString();
-            string referralCommission = OperationEnum.Referral_Commission.ToString().Replace("_", " ");
+            var transactionEnums = Enum.GetNames(typeof(OperationEnum))
+                .Where(e => e.ToLower().Contains("transaction") 
+                || e.ToLower().Contains("fee")
+                || e.ToLower().Contains("referral")
+                || e.ToLower().Contains("buy")
+                || e.ToLower().Contains("sell")
+                || e.ToLower().Contains("trading"))
+                .ToList();
+            transactionEnums = transactionEnums.Select(GetValueFromEnum).ToList();
 
-            var accountReportAccountList = accountReportResultList.Where(x => x.Account == AccountEnum.Spot.ToString() 
-            && (x.Operation == transactionBuy || x.Operation == transactionSpend || x.Operation == transactionRevenue || x.Operation == transactionSold || x.Operation == fee || x.Operation == referralCommission))
-                .GroupBy(x => x.DateTime).ToList();
+            var accountReportAccountList = accountReportResultList.Where(x => x.Account == AccountEnum.Spot.ToString()
+                && transactionEnums.Contains(GetValueFromEnum(x.Operation)))
+                .GroupBy(x => x.DateTime)
+                .ToList();
+        }
+
+        private string GetValueFromEnum(string enumValue)
+        {
+            if(string.IsNullOrEmpty(enumValue))
+            {
+                return string.Empty;
+            }
+
+            return enumValue
+                .Replace("_", " ")
+                .Replace(".", "")
+                .Replace("2.0", "2");
         }
 
         public void ReportTransactionsWithCoin(List<AccountReportResult> accountReportResultList, string coin)
@@ -99,16 +116,20 @@ namespace CsvReaderApp.Services
                 return;
             }
 
-            string transactionBuy = OperationEnum.Transaction_Buy.ToString().Replace("_", " ");
-            string transactionSpend = OperationEnum.Transaction_Spend.ToString().Replace("_", " ");
-            string transactionRevenue = OperationEnum.Transaction_Revenue.ToString().Replace("_", " ");
-            string transactionSold = OperationEnum.Transaction_Sold.ToString().Replace("_", " ");
-            string fee = OperationEnum.Fee.ToString();
-            string referralCommission = OperationEnum.Referral_Commission.ToString().Replace("_", " ");
+            var transactionEnums = Enum.GetNames(typeof(OperationEnum))
+                .Where(e => e.ToLower().Contains("transaction")
+                || e.ToLower().Contains("fee")
+                || e.ToLower().Contains("referral")
+                || e.ToLower().Contains("buy")
+                || e.ToLower().Contains("sell")
+                || e.ToLower().Contains("trading"))
+                .ToList();
+            transactionEnums = transactionEnums.Select(GetValueFromEnum).ToList();
 
             var accountReportAccountList = accountReportResultList.Where(x => x.Account == AccountEnum.Spot.ToString()
-            && (x.Operation == transactionBuy || x.Operation == transactionSpend || x.Operation == transactionRevenue || x.Operation == transactionSold || x.Operation == fee || x.Operation == referralCommission))
-                .GroupBy(x => x.DateTime).ToList();
+                && transactionEnums.Contains(GetValueFromEnum(x.Operation)))
+                .GroupBy(x => x.DateTime)
+                .ToList();
 
             foreach ( var group in accountReportAccountList )
             {
@@ -117,7 +138,6 @@ namespace CsvReaderApp.Services
                     _communication.SendMessage($"time: {group.Key}");
                     foreach (var element in group)
                     {
-                        // Assuming you have a property 'SomeProperty' in the AccountReportResult class to print
                         _communication.SendMessage($"Coin: {element.Coin} | Operation: {element.Operation} | Change: {element.Change} | Account: {element.Account}");
                     }
                 }
