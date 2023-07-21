@@ -2,6 +2,7 @@
 {
     public enum OperationEnum
     {
+        //2021
         Deposit,
         Transaction_Related,
         Large_OTC_trading,
@@ -18,6 +19,12 @@
         ETH_Staking_Reward,
         Savings_purchase,
         Savings_Interest,
-        Savings_Principal_redemption
+        Savings_Principal_redemption,
+        //2022
+        Transaction_Buy,
+        Transaction_Spend,
+        Referral_Commission,
+        Transaction_Revenue,
+        Transaction_Sold
     }
 }

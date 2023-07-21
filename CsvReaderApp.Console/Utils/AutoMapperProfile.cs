@@ -9,7 +9,8 @@ namespace CsvReaderApp.Console.Utils
         public AutoMapperProfile()
         {
             CreateMap<ReportEntry, AccountReportResult>()
-                .ForMember(dest => dest.Change, opt => opt.MapFrom(src => decimal.Parse(src.Change, NumberStyles.Float | NumberStyles.AllowExponent, CultureInfo.InvariantCulture)));
+                .ForMember(dest => dest.Change, opt => opt.MapFrom(src => decimal.Parse(src.Change, NumberStyles.Float | NumberStyles.AllowExponent, CultureInfo.InvariantCulture)))
+                .ForMember(dest => dest.DateTime, opt => opt.MapFrom(src => src.UTC_Time));
         }
     }
 }

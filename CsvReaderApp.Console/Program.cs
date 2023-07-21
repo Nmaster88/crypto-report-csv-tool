@@ -26,8 +26,9 @@ var binanceReport = readerService.ReadRecords<ReportEntry>(filePath);
 
 var destinationList = mapper.Map<List<AccountReportResult>>(binanceReport);
 
-AccountReportService accountReportService = new AccountReportService(new ConsoleCommunication());
-accountReportService.Report(destinationList);
+BinanceReportService accountReportService = new BinanceReportService(new ConsoleCommunication());
+accountReportService.ReportSummary(destinationList);
+accountReportService.ReportTransactions(destinationList);
 
 Console.ReadLine();
 

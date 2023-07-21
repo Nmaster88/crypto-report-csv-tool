@@ -1,172 +1,66 @@
 ﻿using CsvReaderApp.Binance.Models;
 using CsvReaderApp.Models;
-using System.Globalization;
 
 namespace CsvReaderApp.Services
 {
-    [Obsolete("Use AccountReportService")]
-    public class BinanceReportService
+    public interface IBinanceReportService
     {
-        public List<string> Operations { get; set; }
-
-        public List<string> Coins { get; set; }
-
-        public List<string> Accounts { get; set; }
-
-        public List<Dictionary<string, List<AccountReportResult>>> BinanceReportResultsByAccount { get; set; }
-
-        public BinanceReportService()
+        void ReportSummary(List<AccountReportResult> accountReportResultList);
+        void ReportTransactions(List<AccountReportResult> accountReportResultList);
+    }
+    public class BinanceReportService : IBinanceReportService
+    {
+        private readonly ICommunication _communication;
+        public BinanceReportService(ICommunication communication) 
         {
-            BinanceReportResultsByAccount = new List<Dictionary<string, List<AccountReportResult>>>();
+            _communication = communication;
         }
 
-        public void Execute(List<ReportEntry> binanceReports)
+        public void ReportSummary(List<AccountReportResult> accountReportResultList)
         {
-            AddReportToResults(binanceReports);
-
-            foreach (var result in BinanceReportResultsByAccount.Where(x => x.ContainsKey(AccountEnum.Spot.ToString())))
+            if (accountReportResultList == null)
             {
-                Console.WriteLine($"Total {Binance.Models.OperationEnum.Deposit.ToString()} By coin:");
-
-                var deposit = result[AccountEnum.Spot.ToString()].Where(x => x.Operation.Contains(OperationEnum.Deposit.ToString())).GroupBy(c => c.Coin).Select(x => new { Coin = x.Key, Change = x.Sum(e => e.Change) });
-
-                foreach (var accountReport in deposit)
-                {
-                    Console.WriteLine($"| {accountReport.Coin} | {accountReport.Change} |");
-                }
-
-                Console.WriteLine($"Total {OperationEnum.Transaction_Related.ToString()} By coin:");
-
-                var transactions = result[AccountEnum.Spot.ToString()].Where(x => x.Operation.Contains(OperationEnum.Transaction_Related.ToString().Replace("_", " "))).GroupBy(c => c.Coin).Select(x => new { Coin = x.Key, Change = x.Sum(e => e.Change) });
-
-                foreach (var accountReport in transactions)
-                {
-                    Console.WriteLine($"| {accountReport.Coin} | {accountReport.Change} |");
-                }
-
-                Console.WriteLine($"Total {OperationEnum.Large_OTC_trading.ToString()} By coin:");
-
-                var LargeOtcTradings = result[AccountEnum.Spot.ToString()].Where(x => x.Operation.Contains(OperationEnum.Large_OTC_trading.ToString().Replace("_", " "))).GroupBy(c => c.Coin).Select(x => new { Coin = x.Key, Change = x.Sum(e => e.Change) });
-
-                foreach (var accountReport in LargeOtcTradings)
-                {
-                    Console.WriteLine($"| {accountReport.Coin} | {accountReport.Change} |");
-                }
-
-                Console.WriteLine($"Total {OperationEnum.Super_BNB_Mining.ToString()} By coin:");
-
-                var superBnbMining = result[AccountEnum.Spot.ToString()].Where(x => x.Operation.Contains(OperationEnum.Super_BNB_Mining.ToString().Replace("_", " "))).GroupBy(c => c.Coin).Select(x => new { Coin = x.Key, Change = x.Sum(e => e.Change) });
-
-                foreach (var accountReport in superBnbMining)
-                {
-                    Console.WriteLine($"| {accountReport.Coin} | {accountReport.Change} |");
-                }
-
-                Console.WriteLine($"Total {OperationEnum.Buy.ToString()} By coin:");
-
-                var buy = result[AccountEnum.Spot.ToString()].Where(x => x.Operation.Contains(OperationEnum.Buy.ToString().Replace("_", " "))).GroupBy(c => c.Coin).Select(x => new { Coin = x.Key, Change = x.Sum(e => e.Change) });
-
-                foreach (var accountReport in buy)
-                {
-                    Console.WriteLine($"| {accountReport.Coin} | {accountReport.Change} |");
-                }
-
-                Console.WriteLine($"Total {OperationEnum.Sell.ToString()} By coin:");
-
-                var sell = result[AccountEnum.Spot.ToString()].Where(x => x.Operation.Contains(OperationEnum.Sell.ToString().Replace("_", " "))).GroupBy(c => c.Coin).Select(x => new { Coin = x.Key, Change = x.Sum(e => e.Change) });
-
-                foreach (var accountReport in sell)
-                {
-                    Console.WriteLine($"| {accountReport.Coin} | {accountReport.Change} |");
-                }
-
-                Console.WriteLine($"Total {OperationEnum.Fee.ToString()} By coin:");
-
-                var fees = result[AccountEnum.Spot.ToString()].Where(x => x.Operation.Contains(OperationEnum.Fee.ToString().Replace("_", " "))).GroupBy(c => c.Coin).Select(x => new { Coin = x.Key, Change = x.Sum(e => e.Change) });
-
-                foreach (var accountReport in fees)
-                {
-                    Console.WriteLine($"| {accountReport.Coin} | {accountReport.Change} |");
-                }
-
-                Console.WriteLine($"Total {OperationEnum.Referral_Kickback.ToString()} By coin:");
-
-                var referralKickback = result[AccountEnum.Spot.ToString()].Where(x => x.Operation.Contains(OperationEnum.Referral_Kickback.ToString().Replace("_", " "))).GroupBy(c => c.Coin).Select(x => new { Coin = x.Key, Change = x.Sum(e => e.Change) });
-
-                foreach (var accountReport in referralKickback)
-                {
-                    Console.WriteLine($"| {accountReport.Coin} | {accountReport.Change} |");
-                }
-
-                Console.WriteLine($"Total {OperationEnum.POS_savings_interest.ToString()} By coin:");
-
-                var posSavingsInterest = result[AccountEnum.Spot.ToString()].Where(x => x.Operation.Contains(OperationEnum.POS_savings_interest.ToString().Replace("_", " "))).GroupBy(c => c.Coin).Select(x => new { Coin = x.Key, Change = x.Sum(e => e.Change) });
-
-                foreach (var accountReport in posSavingsInterest)
-                {
-                    Console.WriteLine($"| {accountReport.Coin} | {accountReport.Change} |");
-                }
-
-                Console.WriteLine($"Total {OperationEnum.POS_savings_purchase.ToString()} By coin:");
-
-                var posSavingsPurchase = result[AccountEnum.Spot.ToString()].Where(x => x.Operation.Contains(OperationEnum.POS_savings_purchase.ToString().Replace("_", " "))).GroupBy(c => c.Coin).Select(x => new { Coin = x.Key, Change = x.Sum(e => e.Change) });
-
-                foreach (var accountReport in posSavingsPurchase)
-                {
-                    Console.WriteLine($"| {accountReport.Coin} | {accountReport.Change} |");
-                }
-            }
-
-
-            Console.WriteLine();
-
-            ProcessingBinanceReport();
-        }
-
-        private void AddReportToResults(List<ReportEntry> binanceReports)
-        {
-            foreach (ReportEntry binanceReport in binanceReports)
-            {
-                AddAccountReportResult(binanceReport);
-            }
-        }
-
-        private void ProcessingBinanceReport()
-        {
-            throw new NotImplementedException();
-        }
-
-        private void AddAccountReportResult(ReportEntry binanceReport)
-        {
-            if (binanceReport == null)
                 return;
-
-            AccountReportResult accountReportResult = new AccountReportResult();
-            accountReportResult.Operation = binanceReport.Operation;
-            accountReportResult.Coin = binanceReport.Coin;
-            accountReportResult.Change = decimal.Parse(binanceReport.Change, NumberStyles.Float | NumberStyles.AllowExponent, CultureInfo.InvariantCulture);
-
-            var element = BinanceReportResultsByAccount?.FirstOrDefault(elem => elem.ContainsKey(binanceReport.Account));
-            if (element != null)
-            {
-                element.Values.FirstOrDefault()?.Add(accountReportResult);
             }
-            else
+
+            var accountReportAccountList = accountReportResultList.Where(x => x.Account == AccountEnum.Spot.ToString()).ToList();
+
+            var allOperationValues = Enum.GetValues(typeof(OperationEnum));
+            foreach (OperationEnum operationValue in allOperationValues)
             {
-                List<AccountReportResult> binanceReportResults = new List<AccountReportResult>();
-                binanceReportResults.Add(accountReportResult);
-                Dictionary<string, List<AccountReportResult>> keyValues = new Dictionary<string, List<AccountReportResult>>();
-                keyValues.Add(binanceReport.Account, binanceReportResults);
-                BinanceReportResultsByAccount?.Add(keyValues);
+                GroupByValue(accountReportAccountList, operationValue.ToString());
             }
         }
 
-        private void PrintReport(string key, List<AccountReportResult> binanceReportResults)
+        public void ReportTransactions(List<AccountReportResult> accountReportResultList)
         {
-            Console.WriteLine($"For the {key} we have the following results:");
-            foreach (var binanceReportResult in binanceReportResults)
+            if (accountReportResultList == null)
             {
-                Console.WriteLine($"| {binanceReportResult.Coin} | {binanceReportResult.Operation} | {binanceReportResult.Change} |");
+                return;
+            }
+
+            string transactionBuy = OperationEnum.Transaction_Buy.ToString().Replace("_", " ");
+            string transactionSpend = OperationEnum.Transaction_Spend.ToString().Replace("_", " ");
+            string transactionRevenue = OperationEnum.Transaction_Revenue.ToString().Replace("_", " ");
+            string transactionSold = OperationEnum.Transaction_Sold.ToString().Replace("_", " ");
+            string fee = OperationEnum.Fee.ToString();
+            string referralCommission = OperationEnum.Referral_Commission.ToString().Replace("_", " ");
+
+            var accountReportAccountList = accountReportResultList.Where(x => x.Account == AccountEnum.Spot.ToString() 
+            && (x.Operation == transactionBuy || x.Operation == transactionSpend || x.Operation == transactionRevenue || x.Operation == transactionSold || x.Operation == fee || x.Operation == referralCommission))
+                .GroupBy(x => x.DateTime).ToList();
+        }
+
+        private void GroupByValue(List<AccountReportResult> accountReportResultList, string value)
+        {
+            var groupList = accountReportResultList.Where(x => x.Operation.Contains(value.Replace("_", " "))).GroupBy(c => c.Coin).Select(x => new { Coin = x.Key, Change = x.Sum(e => e.Change) });
+            if (groupList != null && groupList.Count() > 0)
+            {
+                _communication.SendMessage($"Total {value} By coin:");
+                foreach (var accountReport in groupList)
+                {
+                    _communication.SendMessage($"| {accountReport.Coin} | {accountReport.Change} |");
+                }
             }
         }
     }

@@ -1,4 +1,4 @@
-﻿namespace CsvReaderApp.Models
+﻿namespace CsvReaderApp.Binance.Models
 {
     public enum AccountEnum
     {
