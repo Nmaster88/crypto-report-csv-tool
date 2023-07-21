@@ -25,6 +25,30 @@
         Transaction_Spend,
         Referral_Commission,
         Transaction_Revenue,
-        Transaction_Sold
+        Transaction_Sold,
+        Staking_Rewards,
+        Simple_Earn_Flexible_Interest,
+        Simple_Earn_Flexible_Subscription,
+        Simple_Earn_Flexible_Redemption,
+        Savings_Distribution,
+        Staking_Purchase,
+        ETH_2_Staking_Rewards, //TODO ETH 2.0 Staking Rewards (fix)
+        Cash_Voucher_Distribution,
+        Distribution,
+        Fiat_Deposit, 
+        Withdraw,
+        Small_Assets_Exchange_BNB,
+        transfer_out,
+        transfer_in,
+        Main_and_Funding_Account_Transfer,
+        Binance_Card_Spending,
+        Card_Cashback,
+        Simple_Earn_Locked_Rewards,
+        Stablecoins_AutoConversion, //TODO Stablecoins Auto-Conversion (fix)
+        Simple_Earn_Locked_Subscription,
+        Simple_Earn_Locked_Redemption,
+        Crypto_Box,
+        BNB_Vault_Rewards,
+        AutoInvest_Transaction
     }
 }

@@ -26,9 +26,33 @@ var binanceReport = readerService.ReadRecords<ReportEntry>(filePath);
 
 var destinationList = mapper.Map<List<AccountReportResult>>(binanceReport);
 
-BinanceReportService accountReportService = new BinanceReportService(new ConsoleCommunication());
+ConsoleCommunication consoleCommunication = new ConsoleCommunication();
+
+BinanceReportService accountReportService = new BinanceReportService(consoleCommunication);
+
+consoleCommunication.SendMessage("");
+consoleCommunication.SendMessage("---ReportSummary---");
+consoleCommunication.SendMessage("");
+
 accountReportService.ReportSummary(destinationList);
-accountReportService.ReportTransactions(destinationList);
+
+consoleCommunication.SendMessage("");
+consoleCommunication.SendMessage("---ReportTransactionsByCoin  EUR---");
+consoleCommunication.SendMessage("");
+
+accountReportService.ReportTransactionsWithCoin(destinationList, "EUR");
+
+consoleCommunication.SendMessage("");
+consoleCommunication.SendMessage("---ReportDistincOperations---");
+consoleCommunication.SendMessage("");
+
+accountReportService.ReportDistinctOperations(destinationList);
+
+consoleCommunication.SendMessage("");
+consoleCommunication.SendMessage("---ReportByCoin---");
+consoleCommunication.SendMessage("");
+
+accountReportService.ReportByCoin(destinationList, "EUR");
 
 Console.ReadLine();
 
