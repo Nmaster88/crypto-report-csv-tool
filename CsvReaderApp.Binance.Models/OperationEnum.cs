@@ -35,7 +35,7 @@
         ETH_2_Staking_Rewards, //TODO ETH 2.0 Staking Rewards (fix)
         Cash_Voucher_Distribution,
         Distribution,
-        Fiat_Deposit, 
+        Fiat_Deposit,
         Withdraw,
         Small_Assets_Exchange_BNB,
         transfer_out,

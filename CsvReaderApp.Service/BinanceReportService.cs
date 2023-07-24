@@ -1,5 +1,6 @@
 ﻿using CsvReaderApp.Binance.Models;
 using CsvReaderApp.Models;
+using CsvReaderApp.Services.Utils;
 
 namespace CsvReaderApp.Services
 {
@@ -14,7 +15,7 @@ namespace CsvReaderApp.Services
     public class BinanceReportService : IBinanceReportService
     {
         private readonly ICommunication _communication;
-        public BinanceReportService(ICommunication communication) 
+        public BinanceReportService(ICommunication communication)
         {
             _communication = communication;
         }
@@ -51,7 +52,7 @@ namespace CsvReaderApp.Services
                 .Distinct()
                 .ToList();
 
-            foreach(var value in accountReportAccountList)
+            foreach (var value in accountReportAccountList)
             {
                 _communication.SendMessage(value);
             }
@@ -81,7 +82,7 @@ namespace CsvReaderApp.Services
             }
 
             var transactionEnums = Enum.GetNames(typeof(OperationEnum))
-                .Where(e => e.ToLower().Contains("transaction") 
+                .Where(e => e.ToLower().Contains("transaction")
                 || e.ToLower().Contains("fee")
                 || e.ToLower().Contains("referral")
                 || e.ToLower().Contains("buy")
@@ -98,7 +99,7 @@ namespace CsvReaderApp.Services
 
         private string GetValueFromEnum(string enumValue)
         {
-            if(string.IsNullOrEmpty(enumValue))
+            if (string.IsNullOrEmpty(enumValue))
             {
                 return string.Empty;
             }
@@ -128,12 +129,12 @@ namespace CsvReaderApp.Services
 
             var accountReportAccountList = accountReportResultList.Where(x => x.Account == AccountEnum.Spot.ToString()
                 && transactionEnums.Contains(GetValueFromEnum(x.Operation)))
-                .GroupBy(x => x.DateTime)
+                .GroupBy(x => x.DateTime, new DateTimeWithMarginComparer())
                 .ToList();
 
-            foreach ( var group in accountReportAccountList )
+            foreach (var group in accountReportAccountList)
             {
-                if(group.Any(x => x.Coin == coin))
+                if (group.Any(x => x.Coin == coin))
                 {
                     _communication.SendMessage($"time: {group.Key}");
                     foreach (var element in group)
@@ -146,7 +147,7 @@ namespace CsvReaderApp.Services
 
         private void GroupByValue(List<AccountReportResult> accountReportResultList, string value)
         {
-            var groupList = accountReportResultList.Where(x => x.Operation.Contains(value.Replace("_", " ").Replace(".","").Replace("2.0", "2"))).GroupBy(c => c.Coin).Select(x => new { Coin = x.Key, Change = x.Sum(e => e.Change) });
+            var groupList = accountReportResultList.Where(x => x.Operation.Contains(value.Replace("_", " ").Replace(".", "").Replace("2.0", "2"))).GroupBy(c => c.Coin).Select(x => new { Coin = x.Key, Change = x.Sum(e => e.Change) });
             if (groupList != null && groupList.Count() > 0)
             {
                 _communication.SendMessage($"Total {value} By coin:");
