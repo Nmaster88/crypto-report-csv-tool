@@ -9,6 +9,7 @@ namespace CsvReaderApp.Services
         void ReportSummary(List<AccountReportResult> accountReportResultList);
         void ReportTransactions(List<AccountReportResult> accountReportResultList);
         void ReportTransactionsWithCoin(List<AccountReportResult> accountReportResultList, string coin);
+        void ReportTransactionsOutAndRelatedWithCoin(List<AccountReportResult> accountReportResultList, string coin);
         void ReportDistinctOperations(List<AccountReportResult> accountReportResultList);
         void ReportByCoin(List<AccountReportResult> accountReportResultList, string coin);
     }
@@ -143,6 +144,90 @@ namespace CsvReaderApp.Services
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// TODO
+        /// </summary>
+        /// <param name="accountReportResultList"></param>
+        /// <param name="coin"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public void ReportTransactionsOutAndRelatedWithCoin(List<AccountReportResult> accountReportResultList, string coin)
+        {
+            //2021
+            //Deposit, //In
+            //Transaction_Related, //In & Out
+            //Large_OTC_trading, //In & Out
+            //Super_BNB_Mining,//In
+            //--POS_savings_purchase,
+            //Buy, //In
+            //--Fee,
+            //Referral_Kickback,//In
+            //--Launchpool_Interest,
+            //--POS_savings_interest,
+            //--POS_savings_redemption,
+            //Sell, //Out
+            //--ETH_Staking,
+            //--ETH_Staking_Reward,
+            //--Savings_purchase, 
+            //--Savings_Interest,
+            //--Savings_Principal_redemption,
+            //2022
+            //Transaction_Buy,//In
+            //Transaction_Spend, //Out
+            //--Referral_Commission,
+            //Transaction_Revenue, //In
+            //Transaction_Sold,//Out
+            //--Staking_Rewards,
+            //--Simple_Earn_Flexible_Interest,
+            //--Simple_Earn_Flexible_Subscription,
+            //--Simple_Earn_Flexible_Redemption,
+            //--Savings_Distribution,
+            //--Staking_Purchase,
+            //--ETH_2_Staking_Rewards,
+            //Cash_Voucher_Distribution, //In
+            //Distribution,//In
+            //Fiat_Deposit,//In
+            //Withdraw,//Out
+            //--Small_Assets_Exchange_BNB,
+            //transfer_out,//Out
+            //transfer_in,//In
+            //Main_and_Funding_Account_Transfer,//In
+            //Binance_Card_Spending,//Out
+            //Card_Cashback,//In
+            //--Simple_Earn_Locked_Rewards,
+            //--Stablecoins_AutoConversion, //TODO Stablecoins Auto-Conversion (fix)
+            //--Simple_Earn_Locked_Subscription,
+            //--Simple_Earn_Locked_Redemption,
+            //Crypto_Box,//In
+            //--BNB_Vault_Rewards,
+            //--AutoInvest_Transaction
+
+            if (accountReportResultList == null)
+            {
+                return;
+            }
+
+            var transactionInEnums = Enum.GetNames(typeof(OperationEnum))
+                .Where(
+                    e => 
+                    e == OperationEnum.Deposit.ToString()
+                    || e == OperationEnum.Transaction_Related.ToString()
+                    || e == OperationEnum.Large_OTC_trading.ToString()
+                    || e == OperationEnum.Sell.ToString()
+                    || e == OperationEnum.Transaction_Spend.ToString()
+                    || e == OperationEnum.Transaction_Revenue.ToString()
+                    || e == OperationEnum.Cash_Voucher_Distribution.ToString()
+                    || e == OperationEnum.transfer_in.ToString()
+                    || e == OperationEnum.Fiat_Deposit.ToString()
+                    || e == OperationEnum.Main_and_Funding_Account_Transfer.ToString()
+                    || e == OperationEnum.Crypto_Box.ToString()
+                )
+                .ToList();
+
+            transactionInEnums = transactionInEnums.Select(GetValueFromEnum).ToList();
+
+            throw new NotImplementedException();
         }
 
         private void GroupByValue(List<AccountReportResult> accountReportResultList, string value)
