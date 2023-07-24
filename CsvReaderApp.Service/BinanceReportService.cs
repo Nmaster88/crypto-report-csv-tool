@@ -211,14 +211,17 @@ namespace CsvReaderApp.Services
             var transactionInEnums = Enum.GetNames(typeof(OperationEnum))
                 .Where(
                     e => 
-                    e == OperationEnum.Deposit.ToString()
+                    e == OperationEnum.Buy.ToString()
                     || e == OperationEnum.Transaction_Related.ToString()
                     || e == OperationEnum.Large_OTC_trading.ToString()
                     || e == OperationEnum.Sell.ToString()
                     || e == OperationEnum.Transaction_Spend.ToString()
+                    || e == OperationEnum.Transaction_Buy.ToString()
                     || e == OperationEnum.Transaction_Revenue.ToString()
+                    || e == OperationEnum.Transaction_Sold.ToString()
                     || e == OperationEnum.Cash_Voucher_Distribution.ToString()
                     || e == OperationEnum.transfer_in.ToString()
+                    || e == OperationEnum.transfer_out.ToString()
                     || e == OperationEnum.Fiat_Deposit.ToString()
                     || e == OperationEnum.Main_and_Funding_Account_Transfer.ToString()
                     || e == OperationEnum.Crypto_Box.ToString()
@@ -227,7 +230,39 @@ namespace CsvReaderApp.Services
 
             transactionInEnums = transactionInEnums.Select(GetValueFromEnum).ToList();
 
-            throw new NotImplementedException();
+            var accountReportAccountInList = accountReportResultList.Where(x => transactionInEnums.Contains(GetValueFromEnum(x.Operation)) && x.Coin == coin && x.Change > 0)
+                .ToList();
+
+            foreach (var accountReport in accountReportAccountInList)
+            {
+                _communication.SendMessage($"Coin: {accountReport.Coin} | Operation: {accountReport.Operation} | Change: {accountReport.Change} | Account: {accountReport.Account}");
+            }
+
+            var transactionOutEnums = Enum.GetNames(typeof(OperationEnum))
+                .Where(
+                    e =>
+                    e == OperationEnum.Transaction_Related.ToString()
+                    || e == OperationEnum.Large_OTC_trading.ToString()
+                    || e == OperationEnum.Sell.ToString()
+                    || e == OperationEnum.Buy.ToString()
+                    || e == OperationEnum.Transaction_Buy.ToString()
+                    || e == OperationEnum.Transaction_Spend.ToString()
+                    || e == OperationEnum.Transaction_Revenue.ToString()
+                    || e == OperationEnum.Transaction_Sold.ToString()
+                    || e == OperationEnum.transfer_in.ToString()
+                    || e == OperationEnum.transfer_out.ToString()
+                )
+                .ToList();
+
+            transactionOutEnums = transactionInEnums.Select(GetValueFromEnum).ToList();
+
+            var accountReportAccountOutList = accountReportResultList.Where(x => transactionOutEnums.Contains(GetValueFromEnum(x.Operation)) && x.Coin == coin && x.Change > 0)
+                .ToList();
+            //TODO
+            foreach (var accountReport in accountReportAccountOutList)
+            {
+                _communication.SendMessage($"Coin: {accountReport.Coin} | Operation: {accountReport.Operation} | Change: {accountReport.Change} | Account: {accountReport.Account}");
+            }
         }
 
         private void GroupByValue(List<AccountReportResult> accountReportResultList, string value)

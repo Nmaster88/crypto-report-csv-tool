@@ -7,6 +7,7 @@ using CsvReaderApp.Models;
 using CsvReaderApp.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Generic;
 
 var configuration = ConfigurationSetup();
 
@@ -63,6 +64,12 @@ consoleCommunication.SendMessage("---ReportByCoin---");
 consoleCommunication.SendMessage("");
 
 accountReportService.ReportByCoin(destinationList, "EUR");
+
+consoleCommunication.SendMessage("");
+consoleCommunication.SendMessage("---ReportTransactionsOutAndRelatedWithCoin---");
+consoleCommunication.SendMessage("");
+
+accountReportService.ReportTransactionsOutAndRelatedWithCoin(destinationList, "EUR");
 
 Console.ReadLine();
 
