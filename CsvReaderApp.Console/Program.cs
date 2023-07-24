@@ -15,16 +15,26 @@ var mapper = serviceProvider.GetRequiredService<IMapper>();
 
 string directory = configuration.GetSection("AppSettings").GetValue<string>("Directory") ?? "C:\\Users\\Nuno\\Downloads";
 string fileName = configuration.GetSection("AppSettings").GetValue<string>("FileName") ?? "binance_report_2021.csv";
-Console.WriteLine("What is the Path for the file? Leave empty to use app settings value.");
-string inputFileName = Console.ReadLine();
-string filePath = !string.IsNullOrEmpty(inputFileName) ? inputFileName : Path.GetFullPath($"{directory}{Path.DirectorySeparatorChar}{fileName}");
 
+List<AccountReportResult> destinationList = new List<AccountReportResult>();
 
-IReader reader = new CsvReaderService();
-ReaderService readerService = new ReaderService(reader);
-var binanceReport = readerService.ReadRecords<ReportEntry>(filePath);
+bool moreFiles = false;
+do
+{
+    Console.WriteLine("What is the Path for the file? Leave empty to use app settings value.");
+    string inputFileName = Console.ReadLine();
+    string filePath = !string.IsNullOrEmpty(inputFileName) ? inputFileName : Path.GetFullPath($"{directory}{Path.DirectorySeparatorChar}{fileName}");
 
-var destinationList = mapper.Map<List<AccountReportResult>>(binanceReport);
+    IReader reader = new CsvReaderService();
+    ReaderService readerService = new ReaderService(reader);
+    var binanceReport = readerService.ReadRecords<ReportEntry>(filePath);
+
+    destinationList.AddRange(mapper.Map<List<AccountReportResult>>(binanceReport));
+
+    Console.WriteLine("Do you want to add another file? Y/N");
+    moreFiles = Console.ReadLine().ToLower() == "y" ? true : false;
+}
+while (moreFiles);
 
 ConsoleCommunication consoleCommunication = new ConsoleCommunication();
 
