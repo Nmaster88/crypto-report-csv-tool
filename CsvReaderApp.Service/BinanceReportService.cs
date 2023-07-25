@@ -284,13 +284,29 @@ namespace CsvReaderApp.Services
             if (useHighestTransactionInList)
             {
                 decimal transactionOutQty = transactionOut.Change;
-
+                //decimal transactionOutQtyMissing = transactionOutQty;
 
                 TransactionResult transactionResult = new TransactionResult();
                 transactionResult.TransactionInId = highestTransactionInId;
                 transaction.TransactionOutId = transactionOut.Id;
                 transaction.QuantityIn = transaction.QuantityIn;
                 //TODO
+                if(transaction.QuantityInMissing >= transactionOutQty)
+                {
+                    transaction.QuantityOut = transactionOutQty;
+                    transaction.QuantityInMissing -= transactionOutQty; //decrement qty missing
+                    if(transaction.QuantityInMissing == 0m)
+                    {
+                        transaction.TransactionInFilled = true;
+                    }
+                }
+                else if(transaction.QuantityInMissing < transactionOutQty)
+                {
+                    transaction.QuantityOut = transactionOutQty;
+                    transactionOutQty = transaction.QuantityInMissing;
+                    transaction.QuantityInMissing = 0m;
+                    //TODO: need to go to next transaction
+                }
             }
         }
 
