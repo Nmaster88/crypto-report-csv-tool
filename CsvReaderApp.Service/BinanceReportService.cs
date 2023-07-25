@@ -1,6 +1,8 @@
 ﻿using CsvReaderApp.Binance.Models;
 using CsvReaderApp.Models;
 using CsvReaderApp.Services.Utils;
+using System.Collections.Generic;
+using System.Transactions;
 
 namespace CsvReaderApp.Services
 {
@@ -263,49 +265,122 @@ namespace CsvReaderApp.Services
             //TODO
             foreach (var transactionOut in transactionOutList)
             {
-                TransactionResult transaction = new TransactionResult();
+                FillTransaction(transactionOut, transactionInList, transactionList);
                 _communication.SendMessage($"Coin: {transactionOut.Coin} | Operation: {transactionOut.Operation} | Change: {transactionOut.Change} | Account: {transactionOut.Account}");
+            }
+
+            foreach(var transaction in transactionList)
+            {
+                _communication.SendMessage($"TransactionInId: {transaction.TransactionInId} | TransactionOutId: {transaction.TransactionOutId} | QuantityIn: {transaction.QuantityIn} | QuantityInMissing: {transaction.QuantityInMissing} | QuantityOut: {transaction.QuantityOut}");
             }
         }
 
-        private void FillTransaction(AccountReportResult transactionOut, List<AccountReportResult> transactionsInList, List<TransactionResult> transactionList)
+        private void FillTransaction(AccountReportResult transactionOut, List<AccountReportResult> transactionsInReportList, List<TransactionResult> transactionList)
         {
-            int igoreIdFrom = 0;
-            int highestTransactionInId = transactionList.Max(tr => tr.TransactionInId);
+
+            if (transactionList == null || transactionList.Count == 0)
+            {
+                transactionList = new List<TransactionResult>();
+            }
+
+            int highestTransactionInId = transactionList.Count > 0 ? transactionList.Max(tr => tr.TransactionInId) : 0;
             bool useHighestTransactionInList = false;
 
-            var transaction = transactionList.FirstOrDefault(x => x.TransactionInId == highestTransactionInId);
+            if (highestTransactionInId == 0)
+            {
+                highestTransactionInId = transactionsInReportList.FirstOrDefault().Id;
+            }
 
-            if ( transaction != null && transaction.QuantityInMissing != 0m && !transaction.TransactionInFilled)
+            //var lastTransaction = transactionList?.LastOrDefault();
+
+            var transaction = transactionList?.FirstOrDefault(x => x.TransactionInId == highestTransactionInId);
+
+            if (transaction != null && transaction.QuantityInMissing == 0m && transaction.TransactionInFilled)
             {
                 useHighestTransactionInList = true;
             }
 
-            if (useHighestTransactionInList)
-            {
-                decimal transactionOutQty = transactionOut.Change;
-                //decimal transactionOutQtyMissing = transactionOutQty;
 
+            decimal transactionOutQty = transactionOut.Change;
+
+            if(useHighestTransactionInList)
+            {
                 TransactionResult transactionResult = new TransactionResult();
                 transactionResult.TransactionInId = highestTransactionInId;
-                transaction.TransactionOutId = transactionOut.Id;
-                transaction.QuantityIn = transaction.QuantityIn;
-                //TODO
-                if(transaction.QuantityInMissing >= transactionOutQty)
+                transactionResult.TransactionOutId = transactionOut.Id;
+                transactionResult.QuantityIn = transaction.QuantityIn;
+
+                DecisionTransaction(transactionsInReportList, transactionList, transactionOut, transactionResult, transaction, transactionOutQty);
+                //if (transactionResult.QuantityInMissing >= transactionOutQty)
+                //{
+                //    transactionResult.QuantityOut = transactionOutQty;
+                //    transactionResult.QuantityInMissing -= transactionOutQty; //decrement qty missing
+                //    if (transactionResult.QuantityInMissing == 0m)
+                //    {
+                //        transactionResult.TransactionInFilled = true;
+                //    }
+                //    transactionList.Add(transaction);
+                //}
+                //else if (transactionResult.QuantityInMissing < transactionOutQty)
+                //{
+                //    transactionResult.QuantityOut = transactionOutQty;
+                //    transactionOutQty -= transaction.QuantityInMissing;
+                //    transactionResult.QuantityInMissing = 0m;
+                //    transactionResult.TransactionInFilled = true;
+                //    transactionList.Add(transaction);
+
+                //    var nextTransaction = transactionsInReportList.Where(t => t.Id > transaction.TransactionInId).OrderBy(t => t.Id).FirstOrDefault();
+
+                //    // If there is a next transaction, call the method recursively with the new transaction
+                //    if (nextTransaction != null)
+                //    {
+                //        FillTransaction(transactionOut, transactionsInReportList, transactionList);
+                //    }
+                //}
+            }
+            else
+            {
+                var transactionInUnfilled = transactionsInReportList.FirstOrDefault(x => x.Id > highestTransactionInId);
+
+                if(transactionInUnfilled != null) 
                 {
-                    transaction.QuantityOut = transactionOutQty;
-                    transaction.QuantityInMissing -= transactionOutQty; //decrement qty missing
-                    if(transaction.QuantityInMissing == 0m)
-                    {
-                        transaction.TransactionInFilled = true;
-                    }
+                    TransactionResult transactionResult = new TransactionResult();
+                    transactionResult.TransactionInId = transactionInUnfilled.Id;
+                    transactionResult.TransactionOutId = transactionOut.Id;
+                    transactionResult.QuantityIn = transactionInUnfilled.Change;
+                    transactionResult.QuantityInMissing= transactionInUnfilled.Change;
+                    DecisionTransaction(transactionsInReportList, transactionList, transactionOut, transactionResult, transaction, transactionOutQty);
                 }
-                else if(transaction.QuantityInMissing < transactionOutQty)
+            }
+
+        }
+
+        private void DecisionTransaction(List<AccountReportResult> transactionsInReportList, List<TransactionResult> transactionList, AccountReportResult transactionOut, TransactionResult transactionResult, TransactionResult transaction, decimal transactionOutQty)
+        {
+            if (transactionResult.QuantityInMissing >= transactionOutQty)
+            {
+                transactionResult.QuantityOut = transactionOutQty;
+                transactionResult.QuantityInMissing -= transactionOutQty; //decrement qty missing
+                if (transactionResult.QuantityInMissing == 0m)
                 {
-                    transaction.QuantityOut = transactionOutQty;
-                    transactionOutQty = transaction.QuantityInMissing;
-                    transaction.QuantityInMissing = 0m;
-                    //TODO: need to go to next transaction
+                    transactionResult.TransactionInFilled = true;
+                }
+                transactionList.Add(transaction);
+            }
+            else if (transactionResult.QuantityInMissing < transactionOutQty)
+            {
+                transactionResult.QuantityOut = transactionOutQty;
+                transactionOutQty -= transaction.QuantityInMissing;
+                transactionResult.QuantityInMissing = 0m;
+                transactionResult.TransactionInFilled = true;
+                transactionList.Add(transaction);
+
+                var nextTransaction = transactionsInReportList.Where(t => t.Id > transaction.TransactionInId).OrderBy(t => t.Id).FirstOrDefault();
+
+                // If there is a next transaction, call the method recursively with the new transaction
+                if (nextTransaction != null)
+                {
+                    FillTransaction(transactionOut, transactionsInReportList, transactionList);
                 }
             }
         }
