@@ -2,6 +2,7 @@
 {
     public class AccountReportResult
     {
+        public int Id { get; set; }
         public string Account { get; set; } = string.Empty;
         public string Operation { get; set; } = string.Empty;
         public string Coin { get; set; } = string.Empty;

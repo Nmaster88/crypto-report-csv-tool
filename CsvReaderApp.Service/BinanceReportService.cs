@@ -208,6 +208,8 @@ namespace CsvReaderApp.Services
                 return;
             }
 
+            List<TransactionResult> transactionList = new List<TransactionResult>();
+
             var transactionInEnums = Enum.GetNames(typeof(OperationEnum))
                 .Where(
                     e => 
@@ -230,12 +232,12 @@ namespace CsvReaderApp.Services
 
             transactionInEnums = transactionInEnums.Select(GetValueFromEnum).ToList();
 
-            var accountReportAccountInList = accountReportResultList.Where(x => transactionInEnums.Contains(GetValueFromEnum(x.Operation)) && x.Coin == coin && x.Change > 0)
+            var transactionInList = accountReportResultList.Where(x => transactionInEnums.Contains(GetValueFromEnum(x.Operation)) && x.Coin == coin && x.Change > 0)
                 .ToList();
 
-            foreach (var accountReport in accountReportAccountInList)
+            foreach (var transactionIn in transactionInList)
             {
-                _communication.SendMessage($"Coin: {accountReport.Coin} | Operation: {accountReport.Operation} | Change: {accountReport.Change} | Account: {accountReport.Account}");
+                _communication.SendMessage($"Coin: {transactionIn.Coin} | Operation: {transactionIn.Operation} | Change: {transactionIn.Change} | Account: {transactionIn.Account}");
             }
 
             var transactionOutEnums = Enum.GetNames(typeof(OperationEnum))
@@ -256,12 +258,39 @@ namespace CsvReaderApp.Services
 
             transactionOutEnums = transactionInEnums.Select(GetValueFromEnum).ToList();
 
-            var accountReportAccountOutList = accountReportResultList.Where(x => transactionOutEnums.Contains(GetValueFromEnum(x.Operation)) && x.Coin == coin && x.Change > 0)
+            var transactionOutList = accountReportResultList.Where(x => transactionOutEnums.Contains(GetValueFromEnum(x.Operation)) && x.Coin == coin && x.Change < 0)
                 .ToList();
             //TODO
-            foreach (var accountReport in accountReportAccountOutList)
+            foreach (var transactionOut in transactionOutList)
             {
-                _communication.SendMessage($"Coin: {accountReport.Coin} | Operation: {accountReport.Operation} | Change: {accountReport.Change} | Account: {accountReport.Account}");
+                TransactionResult transaction = new TransactionResult();
+                _communication.SendMessage($"Coin: {transactionOut.Coin} | Operation: {transactionOut.Operation} | Change: {transactionOut.Change} | Account: {transactionOut.Account}");
+            }
+        }
+
+        private void FillTransaction(AccountReportResult transactionOut, List<AccountReportResult> transactionsInList, List<TransactionResult> transactionList)
+        {
+            int igoreIdFrom = 0;
+            int highestTransactionInId = transactionList.Max(tr => tr.TransactionInId);
+            bool useHighestTransactionInList = false;
+
+            var transaction = transactionList.FirstOrDefault(x => x.TransactionInId == highestTransactionInId);
+
+            if ( transaction != null && transaction.QuantityInMissing != 0m && !transaction.TransactionInFilled)
+            {
+                useHighestTransactionInList = true;
+            }
+
+            if (useHighestTransactionInList)
+            {
+                decimal transactionOutQty = transactionOut.Change;
+
+
+                TransactionResult transactionResult = new TransactionResult();
+                transactionResult.TransactionInId = highestTransactionInId;
+                transaction.TransactionOutId = transactionOut.Id;
+                transaction.QuantityIn = transaction.QuantityIn;
+                //TODO
             }
         }
 
