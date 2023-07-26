@@ -7,7 +7,6 @@ using CsvReaderApp.Models;
 using CsvReaderApp.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Collections.Generic;
 
 var configuration = ConfigurationSetup();
 
@@ -38,8 +37,9 @@ do
 while (moreFiles);
 
 ConsoleCommunication consoleCommunication = new ConsoleCommunication();
+TransactionService transactionService = new TransactionService();
 
-BinanceReportService accountReportService = new BinanceReportService(consoleCommunication);
+BinanceReportService accountReportService = new BinanceReportService(consoleCommunication, transactionService);
 
 consoleCommunication.SendMessage("");
 consoleCommunication.SendMessage("---ReportSummary---");
@@ -102,7 +102,8 @@ IServiceProvider ConfigureServices()
 
     IMapper mapper = mapperConfig.CreateMapper();
     services.AddSingleton(mapper)
-            .AddSingleton<ICommunication, ConsoleCommunication>();
+            .AddSingleton<ICommunication, ConsoleCommunication>()
+            .AddSingleton<ITransactionService, TransactionService>();
 
     var serviceProvider = services.BuildServiceProvider();
     return serviceProvider;

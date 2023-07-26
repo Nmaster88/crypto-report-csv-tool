@@ -2,7 +2,6 @@
 using CsvReaderApp.Models;
 using CsvReaderApp.Services.Utils;
 using System.Collections.Generic;
-using System.Transactions;
 
 namespace CsvReaderApp.Services
 {
@@ -18,9 +17,11 @@ namespace CsvReaderApp.Services
     public class BinanceReportService : IBinanceReportService
     {
         private readonly ICommunication _communication;
-        public BinanceReportService(ICommunication communication)
+        private readonly ITransactionService _transactionService;
+        public BinanceReportService(ICommunication communication, ITransactionService transactionService)
         {
             _communication = communication;
+            _transactionService = transactionService;
         }
 
         public void ReportByCoin(List<AccountReportResult> accountReportResultList, string coin)
@@ -156,232 +157,11 @@ namespace CsvReaderApp.Services
         /// <exception cref="NotImplementedException"></exception>
         public void ReportTransactionsOutAndRelatedWithCoin(List<AccountReportResult> accountReportResultList, string coin)
         {
-            //2021
-            //Deposit, //In
-            //Transaction_Related, //In & Out
-            //Large_OTC_trading, //In & Out
-            //Super_BNB_Mining,//In
-            //--POS_savings_purchase,
-            //Buy, //In
-            //--Fee,
-            //Referral_Kickback,//In
-            //--Launchpool_Interest,
-            //--POS_savings_interest,
-            //--POS_savings_redemption,
-            //Sell, //Out
-            //--ETH_Staking,
-            //--ETH_Staking_Reward,
-            //--Savings_purchase, 
-            //--Savings_Interest,
-            //--Savings_Principal_redemption,
-            //2022
-            //Transaction_Buy,//In
-            //Transaction_Spend, //Out
-            //--Referral_Commission,
-            //Transaction_Revenue, //In
-            //Transaction_Sold,//Out
-            //--Staking_Rewards,
-            //--Simple_Earn_Flexible_Interest,
-            //--Simple_Earn_Flexible_Subscription,
-            //--Simple_Earn_Flexible_Redemption,
-            //--Savings_Distribution,
-            //--Staking_Purchase,
-            //--ETH_2_Staking_Rewards,
-            //Cash_Voucher_Distribution, //In
-            //Distribution,//In
-            //Fiat_Deposit,//In
-            //Withdraw,//Out
-            //--Small_Assets_Exchange_BNB,
-            //transfer_out,//Out
-            //transfer_in,//In
-            //Main_and_Funding_Account_Transfer,//In
-            //Binance_Card_Spending,//Out
-            //Card_Cashback,//In
-            //--Simple_Earn_Locked_Rewards,
-            //--Stablecoins_AutoConversion, //TODO Stablecoins Auto-Conversion (fix)
-            //--Simple_Earn_Locked_Subscription,
-            //--Simple_Earn_Locked_Redemption,
-            //Crypto_Box,//In
-            //--BNB_Vault_Rewards,
-            //--AutoInvest_Transaction
+            var transactionList = _transactionService.CreateTransactionResultList(accountReportResultList, coin);
 
-            if (accountReportResultList == null)
-            {
-                return;
-            }
-
-            List<TransactionResult> transactionList = new List<TransactionResult>();
-
-            var transactionInEnums = Enum.GetNames(typeof(OperationEnum))
-                .Where(
-                    e => 
-                    e == OperationEnum.Buy.ToString()
-                    || e == OperationEnum.Transaction_Related.ToString()
-                    || e == OperationEnum.Large_OTC_trading.ToString()
-                    || e == OperationEnum.Sell.ToString()
-                    || e == OperationEnum.Transaction_Spend.ToString()
-                    || e == OperationEnum.Transaction_Buy.ToString()
-                    || e == OperationEnum.Transaction_Revenue.ToString()
-                    || e == OperationEnum.Transaction_Sold.ToString()
-                    || e == OperationEnum.Cash_Voucher_Distribution.ToString()
-                    || e == OperationEnum.transfer_in.ToString()
-                    || e == OperationEnum.transfer_out.ToString()
-                    || e == OperationEnum.Fiat_Deposit.ToString()
-                    || e == OperationEnum.Main_and_Funding_Account_Transfer.ToString()
-                    || e == OperationEnum.Crypto_Box.ToString()
-                )
-                .ToList();
-
-            transactionInEnums = transactionInEnums.Select(GetValueFromEnum).ToList();
-
-            var transactionInList = accountReportResultList.Where(x => transactionInEnums.Contains(GetValueFromEnum(x.Operation)) && x.Coin == coin && x.Change > 0)
-                .ToList();
-
-            foreach (var transactionIn in transactionInList)
-            {
-                _communication.SendMessage($"Coin: {transactionIn.Coin} | Operation: {transactionIn.Operation} | Change: {transactionIn.Change} | Account: {transactionIn.Account}");
-            }
-
-            var transactionOutEnums = Enum.GetNames(typeof(OperationEnum))
-                .Where(
-                    e =>
-                    e == OperationEnum.Transaction_Related.ToString()
-                    || e == OperationEnum.Large_OTC_trading.ToString()
-                    || e == OperationEnum.Sell.ToString()
-                    || e == OperationEnum.Buy.ToString()
-                    || e == OperationEnum.Transaction_Buy.ToString()
-                    || e == OperationEnum.Transaction_Spend.ToString()
-                    || e == OperationEnum.Transaction_Revenue.ToString()
-                    || e == OperationEnum.Transaction_Sold.ToString()
-                    || e == OperationEnum.transfer_in.ToString()
-                    || e == OperationEnum.transfer_out.ToString()
-                )
-                .ToList();
-
-            transactionOutEnums = transactionInEnums.Select(GetValueFromEnum).ToList();
-
-            var transactionOutList = accountReportResultList.Where(x => transactionOutEnums.Contains(GetValueFromEnum(x.Operation)) && x.Coin == coin && x.Change < 0)
-                .ToList();
-            //TODO
-            foreach (var transactionOut in transactionOutList)
-            {
-                FillTransaction(transactionOut, transactionInList, transactionList);
-                _communication.SendMessage($"Coin: {transactionOut.Coin} | Operation: {transactionOut.Operation} | Change: {transactionOut.Change} | Account: {transactionOut.Account}");
-            }
-
-            foreach(var transaction in transactionList)
+            foreach (var transaction in transactionList)
             {
                 _communication.SendMessage($"TransactionInId: {transaction.TransactionInId} | TransactionOutId: {transaction.TransactionOutId} | QuantityIn: {transaction.QuantityIn} | QuantityInMissing: {transaction.QuantityInMissing} | QuantityOut: {transaction.QuantityOut}");
-            }
-        }
-
-        private void FillTransaction(AccountReportResult transactionOut, List<AccountReportResult> transactionsInReportList, List<TransactionResult> transactionList)
-        {
-
-            if (transactionList == null || transactionList.Count == 0)
-            {
-                transactionList = new List<TransactionResult>();
-            }
-
-            int highestTransactionInId = transactionList.Count > 0 ? transactionList.Max(tr => tr.TransactionInId) : 0;
-            bool useHighestTransactionInList = false;
-
-            if (highestTransactionInId == 0)
-            {
-                highestTransactionInId = transactionsInReportList.FirstOrDefault().Id;
-            }
-
-            //var lastTransaction = transactionList?.LastOrDefault();
-
-            var transaction = transactionList?.FirstOrDefault(x => x.TransactionInId == highestTransactionInId);
-
-            if (transaction != null && transaction.QuantityInMissing == 0m && transaction.TransactionInFilled)
-            {
-                useHighestTransactionInList = true;
-            }
-
-
-            decimal transactionOutQty = transactionOut.Change;
-
-            if(useHighestTransactionInList)
-            {
-                TransactionResult transactionResult = new TransactionResult();
-                transactionResult.TransactionInId = highestTransactionInId;
-                transactionResult.TransactionOutId = transactionOut.Id;
-                transactionResult.QuantityIn = transaction.QuantityIn;
-
-                DecisionTransaction(transactionsInReportList, transactionList, transactionOut, transactionResult, transaction, transactionOutQty);
-                //if (transactionResult.QuantityInMissing >= transactionOutQty)
-                //{
-                //    transactionResult.QuantityOut = transactionOutQty;
-                //    transactionResult.QuantityInMissing -= transactionOutQty; //decrement qty missing
-                //    if (transactionResult.QuantityInMissing == 0m)
-                //    {
-                //        transactionResult.TransactionInFilled = true;
-                //    }
-                //    transactionList.Add(transaction);
-                //}
-                //else if (transactionResult.QuantityInMissing < transactionOutQty)
-                //{
-                //    transactionResult.QuantityOut = transactionOutQty;
-                //    transactionOutQty -= transaction.QuantityInMissing;
-                //    transactionResult.QuantityInMissing = 0m;
-                //    transactionResult.TransactionInFilled = true;
-                //    transactionList.Add(transaction);
-
-                //    var nextTransaction = transactionsInReportList.Where(t => t.Id > transaction.TransactionInId).OrderBy(t => t.Id).FirstOrDefault();
-
-                //    // If there is a next transaction, call the method recursively with the new transaction
-                //    if (nextTransaction != null)
-                //    {
-                //        FillTransaction(transactionOut, transactionsInReportList, transactionList);
-                //    }
-                //}
-            }
-            else
-            {
-                var transactionInUnfilled = transactionsInReportList.FirstOrDefault(x => x.Id > highestTransactionInId);
-
-                if(transactionInUnfilled != null) 
-                {
-                    TransactionResult transactionResult = new TransactionResult();
-                    transactionResult.TransactionInId = transactionInUnfilled.Id;
-                    transactionResult.TransactionOutId = transactionOut.Id;
-                    transactionResult.QuantityIn = transactionInUnfilled.Change;
-                    transactionResult.QuantityInMissing= transactionInUnfilled.Change;
-                    DecisionTransaction(transactionsInReportList, transactionList, transactionOut, transactionResult, transaction, transactionOutQty);
-                }
-            }
-
-        }
-
-        private void DecisionTransaction(List<AccountReportResult> transactionsInReportList, List<TransactionResult> transactionList, AccountReportResult transactionOut, TransactionResult transactionResult, TransactionResult transaction, decimal transactionOutQty)
-        {
-            if (transactionResult.QuantityInMissing >= transactionOutQty)
-            {
-                transactionResult.QuantityOut = transactionOutQty;
-                transactionResult.QuantityInMissing -= transactionOutQty; //decrement qty missing
-                if (transactionResult.QuantityInMissing == 0m)
-                {
-                    transactionResult.TransactionInFilled = true;
-                }
-                transactionList.Add(transaction);
-            }
-            else if (transactionResult.QuantityInMissing < transactionOutQty)
-            {
-                transactionResult.QuantityOut = transactionOutQty;
-                transactionOutQty -= transaction.QuantityInMissing;
-                transactionResult.QuantityInMissing = 0m;
-                transactionResult.TransactionInFilled = true;
-                transactionList.Add(transaction);
-
-                var nextTransaction = transactionsInReportList.Where(t => t.Id > transaction.TransactionInId).OrderBy(t => t.Id).FirstOrDefault();
-
-                // If there is a next transaction, call the method recursively with the new transaction
-                if (nextTransaction != null)
-                {
-                    FillTransaction(transactionOut, transactionsInReportList, transactionList);
-                }
             }
         }
 
