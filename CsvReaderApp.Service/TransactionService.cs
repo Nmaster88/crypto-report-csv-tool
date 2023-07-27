@@ -90,18 +90,7 @@ namespace CsvReaderApp.Services
 
         private void FillTransactionResults(FillTransactionResultsOptions options)
         {
-            if (options.TransactionOut == null)
-            {
-                throw new ArgumentNullException(nameof(options.TransactionOut));
-            }
-            if (options.IncreaseAccountReportListByCoin == null)
-            {
-                throw new ArgumentNullException(nameof(options.IncreaseAccountReportListByCoin));
-            }
-            if (options.TransactionList == null || options.TransactionList.Count == 0)
-            {
-                options.TransactionList = new List<TransactionResult>();
-            }
+            ValidateOptions(options);
 
             int highestTransactionInId = options.TransactionList?.Count > 0 ? options.TransactionList.Max(tr => tr.TransactionInId) : 0;
             bool useHighestTransactionInList = false;
@@ -117,15 +106,26 @@ namespace CsvReaderApp.Services
             {
                 useHighestTransactionInList = true;
             }
-            else if(transaction != null && transaction.QuantityInMissing == 0m && transaction.TransactionInFilled)
+            else if (transaction != null && transaction.QuantityInMissing == 0m && transaction.TransactionInFilled)
             {
                 highestTransactionInId = options.IncreaseAccountReportListByCoin.Where(t => t.Id > transaction.TransactionInId).OrderBy(t => t.Id).FirstOrDefault()?.Id ?? 0;
             }
 
+            //int highestTransactionInId = GetHighestTransactionInId(options);
+            //bool useHighestTransactionInList = ShouldUseHighestTransaction(options, highestTransactionInId);
+
+
             if (useHighestTransactionInList)
             {
-                TransactionResult transactionResult = CreateTransactionResult(highestTransactionInId, options.TransactionOut.Id, transaction.QuantityIn);
-                DecisionTransaction(options.IncreaseAccountReportListByCoin, options.TransactionList, options.TransactionOut, transactionResult, transaction);
+                if(!transaction.TransactionInFilled)
+                {
+                    DecisionTransaction(options.IncreaseAccountReportListByCoin, options.TransactionList, options.TransactionOut, transaction);
+                }
+                else
+                {
+                    TransactionResult transactionResult = CreateTransactionResult(highestTransactionInId, options.TransactionOut.Id, transaction.QuantityIn);
+                    DecisionTransaction(options.IncreaseAccountReportListByCoin, options.TransactionList, options.TransactionOut, transactionResult);
+                }
             }
             else
             {
@@ -134,10 +134,51 @@ namespace CsvReaderApp.Services
                 if (transactionInUnfilled != null)
                 {
                     TransactionResult transactionResult = CreateTransactionResult(transactionInUnfilled.Id, options.TransactionOut.Id, transactionInUnfilled.Change, transactionInUnfilled.Change);
-                    DecisionTransaction(options.IncreaseAccountReportListByCoin, options.TransactionList, options.TransactionOut, transactionResult, transaction);
+                    DecisionTransaction(options.IncreaseAccountReportListByCoin, options.TransactionList, options.TransactionOut, transactionResult);
                 }
             }
+        }
 
+        private void ValidateOptions(FillTransactionResultsOptions options)
+        {
+            if (options.TransactionOut == null)
+            {
+                throw new ArgumentNullException(nameof(options.TransactionOut));
+            }
+            if (options.IncreaseAccountReportListByCoin == null)
+            {
+                throw new ArgumentNullException(nameof(options.IncreaseAccountReportListByCoin));
+            }
+            if (options.TransactionList == null || options.TransactionList.Count == 0)
+            {
+                options.TransactionList = new List<TransactionResult>();
+            }
+        }
+
+        private int GetHighestTransactionInId(FillTransactionResultsOptions options)
+        {
+            return options.TransactionList?.Count > 0 ? options.TransactionList.Max(tr => tr.TransactionInId) : 0;
+        }
+
+        private bool ShouldUseHighestTransaction(FillTransactionResultsOptions options, int highestTransactionInId)
+        {
+            if (highestTransactionInId == 0)
+            {
+                highestTransactionInId = options.IncreaseAccountReportListByCoin.FirstOrDefault()?.Id ?? 0;
+            }
+
+            var transaction = options.TransactionList?.FirstOrDefault(x => x.TransactionInId == highestTransactionInId);
+
+            if (transaction != null && transaction.QuantityInMissing != 0m && !transaction.TransactionInFilled)
+            {
+                return true;
+            }
+            else if (transaction != null && transaction.QuantityInMissing == 0m && transaction.TransactionInFilled)
+            {
+                highestTransactionInId = options.IncreaseAccountReportListByCoin.Where(t => t.Id > transaction.TransactionInId).OrderBy(t => t.Id).FirstOrDefault()?.Id ?? 0;
+            }
+
+            return false;
         }
 
         private TransactionResult CreateTransactionResult(int transactionInId, int transactionOutId, decimal quantityIn, decimal quantityInMissing = 0m)
@@ -151,14 +192,14 @@ namespace CsvReaderApp.Services
             };
         }
 
-        private void DecisionTransaction(List<AccountReportResult> transactionsInReportList, List<TransactionResult> transactionList, AccountReportResult transactionOut, TransactionResult transactionResult, TransactionResult transaction)
+        private void DecisionTransaction(List<AccountReportResult> transactionsInReportList, List<TransactionResult> transactionList, AccountReportResult transactionOut, TransactionResult transactionResult)
         {
             decimal transactionOutQty = transactionOut.Change;
 
             if (transactionResult.QuantityInMissing >= Math.Abs(transactionOutQty))
             {
                 transactionResult.QuantityOut = transactionOutQty;
-                transactionResult.QuantityInMissing -= transactionOutQty; //decrement qty missing
+                transactionResult.QuantityInMissing -= Math.Abs(transactionOutQty);
                 if (transactionResult.QuantityInMissing == 0m)
                 {
                     transactionResult.TransactionInFilled = true;
@@ -177,29 +218,13 @@ namespace CsvReaderApp.Services
                 transactionResult.TransactionInFilled = true;
                 transactionList.Add(transactionResult);
 
-                AccountReportResult nextTransaction = null;
-                if (transaction == null)
+                var options = new FillTransactionResultsOptions
                 {
-                    nextTransaction = transactionsInReportList.Where(t => t.Id > transactionResult.TransactionInId).OrderBy(t => t.Id).FirstOrDefault();
-                }
-                else
-                {
-                    //TODO fix this
-                    nextTransaction = transactionsInReportList.Where(t => t.Id > transaction.TransactionInId).OrderBy(t => t.Id).FirstOrDefault();
-                }
-
-                // If there is a next transaction, call the method recursively with the new transaction
-                if (nextTransaction != null)
-                {
-                    //TODO: needs fixing
-                    var options = new FillTransactionResultsOptions
-                    {
-                        IncreaseAccountReportListByCoin = transactionsInReportList,
-                        TransactionList = transactionList,
-                        TransactionOut = transactionOut,
-                    };
-                    FillTransactionResults(options);
-                }
+                    IncreaseAccountReportListByCoin = transactionsInReportList,
+                    TransactionList = transactionList,
+                    TransactionOut = transactionOut,
+                };
+                FillTransactionResults(options);
             }
         }
 
