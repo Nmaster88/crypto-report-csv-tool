@@ -113,17 +113,17 @@ namespace CsvReaderApp.Services
 
             var transaction = options.TransactionList?.FirstOrDefault(x => x.TransactionInId == highestTransactionInId);
 
-            if (transaction != null && transaction.QuantityInMissing == 0m && transaction.TransactionInFilled)
+            if (transaction != null && transaction.QuantityInMissing != 0m && !transaction.TransactionInFilled)
             {
                 useHighestTransactionInList = true;
+            }
+            else if(transaction != null && transaction.QuantityInMissing == 0m && transaction.TransactionInFilled)
+            {
+                highestTransactionInId = options.IncreaseAccountReportListByCoin.Where(t => t.Id > transaction.TransactionInId).OrderBy(t => t.Id).FirstOrDefault()?.Id ?? 0;
             }
 
             if (useHighestTransactionInList)
             {
-                //TransactionResult transactionResult = new TransactionResult();
-                //transactionResult.TransactionInId = highestTransactionInId;
-                //transactionResult.TransactionOutId = transactionOut.Id;
-                //transactionResult.QuantityIn = transaction.QuantityIn;
                 TransactionResult transactionResult = CreateTransactionResult(highestTransactionInId, options.TransactionOut.Id, transaction.QuantityIn);
                 DecisionTransaction(options.IncreaseAccountReportListByCoin, options.TransactionList, options.TransactionOut, transactionResult, transaction);
             }
@@ -133,11 +133,6 @@ namespace CsvReaderApp.Services
 
                 if (transactionInUnfilled != null)
                 {
-                    //TransactionResult transactionResult = new TransactionResult();
-                    //transactionResult.TransactionInId = transactionInUnfilled.Id;
-                    //transactionResult.TransactionOutId = transactionOut.Id;
-                    //transactionResult.QuantityIn = transactionInUnfilled.Change;
-                    //transactionResult.QuantityInMissing = transactionInUnfilled.Change;
                     TransactionResult transactionResult = CreateTransactionResult(transactionInUnfilled.Id, options.TransactionOut.Id, transactionInUnfilled.Change, transactionInUnfilled.Change);
                     DecisionTransaction(options.IncreaseAccountReportListByCoin, options.TransactionList, options.TransactionOut, transactionResult, transaction);
                 }
@@ -189,6 +184,7 @@ namespace CsvReaderApp.Services
                 }
                 else
                 {
+                    //TODO fix this
                     nextTransaction = transactionsInReportList.Where(t => t.Id > transaction.TransactionInId).OrderBy(t => t.Id).FirstOrDefault();
                 }
 
