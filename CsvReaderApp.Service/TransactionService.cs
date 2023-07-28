@@ -117,13 +117,15 @@ namespace CsvReaderApp.Services
 
             if (useHighestTransactionInList)
             {
-                if(!transaction.TransactionInFilled)
+                TransactionResult transactionResult = CreateTransactionResult(highestTransactionInId, options.TransactionOut.Id, transaction.QuantityIn);
+                if (!transaction.TransactionInFilled)
                 {
-                    DecisionTransaction(options.IncreaseAccountReportListByCoin, options.TransactionList, options.TransactionOut, transaction);
+                    transactionResult.QuantityInMissing = transaction.QuantityInMissing;
+                    transactionResult.QuantityOut = transaction.QuantityOut;
+                    DecisionTransaction(options.IncreaseAccountReportListByCoin, options.TransactionList, options.TransactionOut, transactionResult);
                 }
                 else
                 {
-                    TransactionResult transactionResult = CreateTransactionResult(highestTransactionInId, options.TransactionOut.Id, transaction.QuantityIn);
                     DecisionTransaction(options.IncreaseAccountReportListByCoin, options.TransactionList, options.TransactionOut, transactionResult);
                 }
             }
