@@ -9,6 +9,8 @@ namespace CsvReaderApp.Services
     }
     public class TransactionService : ITransactionService
     {
+        public List<TransactionResult> TransactionResults { get; set; } = new List<TransactionResult>();
+
         public List<TransactionResult> CreateTransactionResultList(List<AccountReportResult> accountReportResultList, string coin)
         {
             //2021
@@ -72,11 +74,11 @@ namespace CsvReaderApp.Services
             List<AccountReportResult> IncreaseAccountReportListByCoin = CreateIncreaseAccountReportListByCoin(accountReportResultList, coin);
             List<AccountReportResult> DecreaseAccountReportListByCoin = CreateDecreaseAccountReportListByCoin(accountReportResultList, coin);
 
-            List<TransactionResult> transactionList = new List<TransactionResult>();
+            //List<TransactionResult> transactionList = new List<TransactionResult>();
             var options = new FillTransactionResultsOptions
             {
                 IncreaseAccountReportListByCoin = IncreaseAccountReportListByCoin,
-                TransactionList = transactionList
+                //TransactionList = transactionList
             };
             foreach (var transactionOut in DecreaseAccountReportListByCoin)
             {
@@ -84,15 +86,15 @@ namespace CsvReaderApp.Services
                 FillTransactionResults(options);
             }
 
-
-            return transactionList;
+            return TransactionResults;
+            //return transactionList;
         }
 
         private void FillTransactionResults(FillTransactionResultsOptions options)
         {
             ValidateOptions(options);
 
-            int highestTransactionInId = options.TransactionList?.Count > 0 ? options.TransactionList.Max(tr => tr.TransactionInId) : 0;
+            int highestTransactionInId = TransactionResults?.Count > 0 ? TransactionResults.Max(tr => tr.TransactionInId) : 0;
             bool useHighestTransactionInList = false;
 
             if (highestTransactionInId == 0)
@@ -100,7 +102,7 @@ namespace CsvReaderApp.Services
                 highestTransactionInId = options.IncreaseAccountReportListByCoin.FirstOrDefault()?.Id ?? 0;
             }
 
-            var transaction = options.TransactionList?.FirstOrDefault(x => x.TransactionInId == highestTransactionInId);
+            var transaction = TransactionResults?.LastOrDefault(x => x.TransactionInId == highestTransactionInId);
 
             if (transaction != null && transaction.QuantityInMissing != 0m && !transaction.TransactionInFilled)
             {
@@ -122,11 +124,11 @@ namespace CsvReaderApp.Services
                 {
                     transactionResult.QuantityInMissing = transaction.QuantityInMissing;
                     transactionResult.QuantityOut = transaction.QuantityOut;
-                    DecisionTransaction(options.IncreaseAccountReportListByCoin, options.TransactionList, options.TransactionOut, transactionResult);
+                    DecisionTransaction(options.IncreaseAccountReportListByCoin, options.TransactionOut, transactionResult);
                 }
                 else
                 {
-                    DecisionTransaction(options.IncreaseAccountReportListByCoin, options.TransactionList, options.TransactionOut, transactionResult);
+                    DecisionTransaction(options.IncreaseAccountReportListByCoin, options.TransactionOut, transactionResult);
                 }
             }
             else
@@ -136,7 +138,7 @@ namespace CsvReaderApp.Services
                 if (transactionInUnfilled != null)
                 {
                     TransactionResult transactionResult = CreateTransactionResult(transactionInUnfilled.Id, options.TransactionOut.Id, transactionInUnfilled.Change, transactionInUnfilled.Change);
-                    DecisionTransaction(options.IncreaseAccountReportListByCoin, options.TransactionList, options.TransactionOut, transactionResult);
+                    DecisionTransaction(options.IncreaseAccountReportListByCoin, options.TransactionOut, transactionResult);
                 }
             }
         }
@@ -151,10 +153,10 @@ namespace CsvReaderApp.Services
             {
                 throw new ArgumentNullException(nameof(options.IncreaseAccountReportListByCoin));
             }
-            if (options.TransactionList == null || options.TransactionList.Count == 0)
-            {
-                options.TransactionList = new List<TransactionResult>();
-            }
+            //if (options.TransactionList == null || options.TransactionList.Count == 0)
+            //{
+            //    options.TransactionList = new List<TransactionResult>();
+            //}
         }
 
         private int GetHighestTransactionInId(FillTransactionResultsOptions options)
@@ -194,19 +196,19 @@ namespace CsvReaderApp.Services
             };
         }
 
-        private void DecisionTransaction(List<AccountReportResult> transactionsInReportList, List<TransactionResult> transactionList, AccountReportResult transactionOut, TransactionResult transactionResult)
+        private void DecisionTransaction(List<AccountReportResult> transactionsInReportList, /*List<TransactionResult> transactionList,*/ AccountReportResult transactionOut, TransactionResult transactionResult)
         {
             decimal transactionOutQty = transactionOut.Change;
 
             if (transactionResult.QuantityInMissing >= Math.Abs(transactionOutQty))
             {
-                transactionResult.QuantityOut = transactionOutQty;
+                transactionResult.QuantityOut = Math.Abs(transactionOutQty);
                 transactionResult.QuantityInMissing -= Math.Abs(transactionOutQty);
                 if (transactionResult.QuantityInMissing == 0m)
                 {
                     transactionResult.TransactionInFilled = true;
                 }
-                transactionList.Add(transactionResult);
+                TransactionResults.Add(transactionResult);
             }
             else if (transactionResult.QuantityInMissing < Math.Abs(transactionOutQty))
             {
@@ -215,15 +217,15 @@ namespace CsvReaderApp.Services
                     transactionOut.Change += transactionResult.QuantityInMissing;
                 }
 
-                transactionResult.QuantityOut = transactionResult.QuantityInMissing;
+                transactionResult.QuantityOut = Math.Abs(transactionResult.QuantityInMissing);
                 transactionResult.QuantityInMissing = 0m;
                 transactionResult.TransactionInFilled = true;
-                transactionList.Add(transactionResult);
+                TransactionResults.Add(transactionResult);
 
                 var options = new FillTransactionResultsOptions
                 {
                     IncreaseAccountReportListByCoin = transactionsInReportList,
-                    TransactionList = transactionList,
+                    //TransactionList = transactionList,
                     TransactionOut = transactionOut,
                 };
                 FillTransactionResults(options);
