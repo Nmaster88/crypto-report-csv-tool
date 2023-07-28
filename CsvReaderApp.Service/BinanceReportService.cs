@@ -1,7 +1,6 @@
 ﻿using CsvReaderApp.Binance.Models;
 using CsvReaderApp.Models;
 using CsvReaderApp.Services.Utils;
-using System.Collections.Generic;
 
 namespace CsvReaderApp.Services
 {

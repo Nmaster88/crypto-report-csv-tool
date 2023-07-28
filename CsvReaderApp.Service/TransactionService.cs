@@ -210,7 +210,7 @@ namespace CsvReaderApp.Services
             }
             else if (transactionResult.QuantityInMissing < Math.Abs(transactionOutQty))
             {
-                if(transactionOut.Change <0)
+                if (transactionOut.Change < 0)
                 {
                     transactionOut.Change += transactionResult.QuantityInMissing;
                 }
