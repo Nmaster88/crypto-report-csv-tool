@@ -113,13 +113,15 @@ namespace CsvReaderApp.Services
                 highestTransactionInId = options.IncreaseAccountReportListByCoin.Where(t => t.Id > transaction.TransactionInId).OrderBy(t => t.Id).FirstOrDefault()?.Id ?? 0;
             }
 
+            //TODO: we want more information about the IncreaseAccountReportListByCoin
+
             //int highestTransactionInId = GetHighestTransactionInId(options);
             //bool useHighestTransactionInList = ShouldUseHighestTransaction(options, highestTransactionInId);
 
 
             if (useHighestTransactionInList)
             {
-                TransactionResult transactionResult = CreateTransactionResult(highestTransactionInId, options.TransactionOut.Id, transaction.QuantityIn);
+                TransactionResult transactionResult = CreateTransactionResult(highestTransactionInId, options.TransactionOut, transaction.QuantityIn);
                 if (!transaction.TransactionInFilled)
                 {
                     transactionResult.QuantityInMissing = transaction.QuantityInMissing;
@@ -137,7 +139,7 @@ namespace CsvReaderApp.Services
 
                 if (transactionInUnfilled != null)
                 {
-                    TransactionResult transactionResult = CreateTransactionResult(transactionInUnfilled.Id, options.TransactionOut.Id, transactionInUnfilled.Change, transactionInUnfilled.Change);
+                    TransactionResult transactionResult = CreateTransactionResult(transactionInUnfilled.Id, options.TransactionOut, transactionInUnfilled.Change, transactionInUnfilled.Change);
                     DecisionTransaction(options.IncreaseAccountReportListByCoin, options.TransactionOut, transactionResult);
                 }
             }
@@ -185,18 +187,19 @@ namespace CsvReaderApp.Services
             return false;
         }
 
-        private TransactionResult CreateTransactionResult(int transactionInId, int transactionOutId, decimal quantityIn, decimal quantityInMissing = 0m)
+        private TransactionResult CreateTransactionResult(int transactionInId, AccountReportResult transactionOut, decimal quantityIn, decimal quantityInMissing = 0m)
         {
             return new TransactionResult
             {
+                OutCoin = transactionOut.Coin,
                 TransactionInId = transactionInId,
-                TransactionOutId = transactionOutId,
+                TransactionOutId = transactionOut.Id,
                 QuantityIn = quantityIn,
                 QuantityInMissing = quantityInMissing
             };
         }
 
-        private void DecisionTransaction(List<AccountReportResult> transactionsInReportList, /*List<TransactionResult> transactionList,*/ AccountReportResult transactionOut, TransactionResult transactionResult)
+        private void DecisionTransaction(List<AccountReportResult> transactionsInReportList,AccountReportResult transactionOut, TransactionResult transactionResult)
         {
             decimal transactionOutQty = transactionOut.Change;
 
