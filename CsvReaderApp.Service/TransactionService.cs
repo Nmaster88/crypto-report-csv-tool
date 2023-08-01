@@ -90,16 +90,56 @@ namespace CsvReaderApp.Services
             //return transactionList;
         }
 
+        //private void FillTransactionResults(FillTransactionResultsOptions options)
+        //{
+        //    ValidateOptions(options);
+
+        //    int highestTransactionInId = GetHighestTransactionInId(options);
+        //    AccountReportResult accountReportResult = GetAccountReportResultByTransactionId(options, highestTransactionInId);
+
+        //    bool useHighestTransactionInList = accountReportResult != null;
+
+        //    if (useHighestTransactionInList)
+        //    {
+        //        TransactionResult transactionResult = CreateTransactionResult(highestTransactionInId, options.TransactionOut, accountReportResult.QuantityIn);
+
+        //        if (!options.TransactionOut.TransactionInFilled)
+        //        {
+        //            transactionResult.QuantityInMissing = options.TransactionOut.QuantityInMissing;
+        //            transactionResult.QuantityOut = options.TransactionOut.QuantityOut;
+        //        }
+
+        //        SetTransactionDetails(transactionResult, options.TransactionOut, accountReportResult);
+
+        //        DecisionTransaction(options.IncreaseAccountReportListByCoin, options.TransactionOut, transactionResult);
+        //    }
+        //    else
+        //    {
+        //        var transactionInUnfilled = options.IncreaseAccountReportListByCoin.FirstOrDefault(x => x.Id == highestTransactionInId);
+
+        //        if (transactionInUnfilled != null)
+        //        {
+        //            TransactionResult transactionResult = CreateTransactionResult(transactionInUnfilled.Id, options.TransactionOut, transactionInUnfilled.Change, transactionInUnfilled.Change);
+
+        //            SetTransactionDetails(transactionResult, options.TransactionOut, accountReportResult);
+
+        //            DecisionTransaction(options.IncreaseAccountReportListByCoin, options.TransactionOut, transactionResult);
+        //        }
+        //    }
+        //}
+
         private void FillTransactionResults(FillTransactionResultsOptions options)
         {
             ValidateOptions(options);
 
             int highestTransactionInId = TransactionResults?.Count > 0 ? TransactionResults.Max(tr => tr.TransactionInId) : 0;
             bool useHighestTransactionInList = false;
+            AccountReportResult accountReportResult = null;
 
             if (highestTransactionInId == 0)
             {
                 highestTransactionInId = options.IncreaseAccountReportListByCoin.FirstOrDefault()?.Id ?? 0;
+                accountReportResult = options.IncreaseAccountReportListByCoin.FirstOrDefault();
             }
 
             var transaction = TransactionResults?.LastOrDefault(x => x.TransactionInId == highestTransactionInId);
@@ -111,17 +151,18 @@ namespace CsvReaderApp.Services
             else if (transaction != null && transaction.QuantityInMissing == 0m && transaction.TransactionInFilled)
             {
                 highestTransactionInId = options.IncreaseAccountReportListByCoin.Where(t => t.Id > transaction.TransactionInId).OrderBy(t => t.Id).FirstOrDefault()?.Id ?? 0;
+                accountReportResult = options.IncreaseAccountReportListByCoin.Where(t => t.Id > transaction.TransactionInId).OrderBy(t => t.Id).FirstOrDefault();
             }
-
-            //TODO: we want more information about the IncreaseAccountReportListByCoin
-
-            //int highestTransactionInId = GetHighestTransactionInId(options);
-            //bool useHighestTransactionInList = ShouldUseHighestTransaction(options, highestTransactionInId);
-
 
             if (useHighestTransactionInList)
             {
                 TransactionResult transactionResult = CreateTransactionResult(highestTransactionInId, options.TransactionOut, transaction.QuantityIn);
+                if (accountReportResult != null)
+                {
+                    transactionResult.InCoin = accountReportResult.Coin;
+                    transactionResult.BuyAndSellInterval = options.TransactionOut.DateTime - accountReportResult.DateTime;
+                    transactionResult.OneYearOrMore = transactionResult.BuyAndSellInterval.TotalDays > 365 ? true : false;
+                }
                 if (!transaction.TransactionInFilled)
                 {
                     transactionResult.QuantityInMissing = transaction.QuantityInMissing;
@@ -140,6 +181,12 @@ namespace CsvReaderApp.Services
                 if (transactionInUnfilled != null)
                 {
                     TransactionResult transactionResult = CreateTransactionResult(transactionInUnfilled.Id, options.TransactionOut, transactionInUnfilled.Change, transactionInUnfilled.Change);
+                    if (accountReportResult != null)
+                    {
+                        transactionResult.InCoin = accountReportResult.Coin;
+                        transactionResult.BuyAndSellInterval = options.TransactionOut.DateTime - accountReportResult.DateTime;
+                        transactionResult.OneYearOrMore = transactionResult.BuyAndSellInterval.TotalDays > 365 ? true : false;
+                    }
                     DecisionTransaction(options.IncreaseAccountReportListByCoin, options.TransactionOut, transactionResult);
                 }
             }
@@ -155,15 +202,33 @@ namespace CsvReaderApp.Services
             {
                 throw new ArgumentNullException(nameof(options.IncreaseAccountReportListByCoin));
             }
-            //if (options.TransactionList == null || options.TransactionList.Count == 0)
-            //{
-            //    options.TransactionList = new List<TransactionResult>();
-            //}
+        }
+
+        private void SetTransactionDetails(TransactionResult transactionResult, TransactionResult optionsTransaction, AccountReportResult accountReportResult)
+        {
+            if (accountReportResult != null)
+            {
+                transactionResult.InCoin = accountReportResult.Coin;
+                transactionResult.BuyAndSellInterval = optionsTransaction.DateTime - accountReportResult.DateTime;
+                transactionResult.OneYearOrMore = transactionResult.BuyAndSellInterval.TotalDays > 365;
+            }
+        }
+
+        private AccountReportResult GetAccountReportResultByTransactionId(FillTransactionResultsOptions options, int transactionInId)
+        {
+            return options.IncreaseAccountReportListByCoin.FirstOrDefault(x => x.Id == transactionInId);
         }
 
         private int GetHighestTransactionInId(FillTransactionResultsOptions options)
         {
-            return options.TransactionList?.Count > 0 ? options.TransactionList.Max(tr => tr.TransactionInId) : 0;
+            int highestTransactionInId = TransactionResults?.Count > 0 ? TransactionResults.Max(tr => tr.TransactionInId) : 0;
+
+            if (highestTransactionInId == 0)
+            {
+                highestTransactionInId = options.IncreaseAccountReportListByCoin.FirstOrDefault()?.Id ?? 0;
+            }
+
+            return highestTransactionInId;
         }
 
         private bool ShouldUseHighestTransaction(FillTransactionResultsOptions options, int highestTransactionInId)
