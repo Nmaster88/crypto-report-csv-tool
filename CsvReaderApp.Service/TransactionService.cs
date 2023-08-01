@@ -204,15 +204,15 @@ namespace CsvReaderApp.Services
             }
         }
 
-        private void SetTransactionDetails(TransactionResult transactionResult, TransactionResult optionsTransaction, AccountReportResult accountReportResult)
-        {
-            if (accountReportResult != null)
-            {
-                transactionResult.InCoin = accountReportResult.Coin;
-                transactionResult.BuyAndSellInterval = optionsTransaction.DateTime - accountReportResult.DateTime;
-                transactionResult.OneYearOrMore = transactionResult.BuyAndSellInterval.TotalDays > 365;
-            }
-        }
+        //private void SetTransactionDetails(TransactionResult transactionResult, TransactionResult optionsTransaction, AccountReportResult accountReportResult)
+        //{
+        //    if (accountReportResult != null)
+        //    {
+        //        transactionResult.InCoin = accountReportResult.Coin;
+        //        transactionResult.BuyAndSellInterval = optionsTransaction.DateTime - accountReportResult.DateTime;
+        //        transactionResult.OneYearOrMore = transactionResult.BuyAndSellInterval.TotalDays > 365;
+        //    }
+        //}
 
         private AccountReportResult GetAccountReportResultByTransactionId(FillTransactionResultsOptions options, int transactionInId)
         {
