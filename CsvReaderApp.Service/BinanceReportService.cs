@@ -160,7 +160,7 @@ namespace CsvReaderApp.Services
 
             foreach (var transaction in transactionList)
             {
-                _communication.SendMessage($"TransactionInId: {transaction.TransactionInId} | TransactionOutId: {transaction.TransactionOutId} | QuantityIn: {transaction.QuantityIn} | QuantityInMissing: {transaction.QuantityInMissing} | QuantityOut: {transaction.QuantityOut}");
+                _communication.SendMessage($"CoinIn: {transaction.InCoin} | TransactionInId: {transaction.TransactionInId} | CoinIn: {transaction.OutCoin} | TransactionOutId: {transaction.TransactionOutId} | QuantityIn: {transaction.QuantityIn} | QuantityInMissing: {transaction.QuantityInMissing} | QuantityOut: {transaction.QuantityOut} | BuyAndSellDaysInterval: {transaction.BuyAndSellInterval.Days} | OneYearOrMore: {transaction.OneYearOrMore}");
             }
         }
 

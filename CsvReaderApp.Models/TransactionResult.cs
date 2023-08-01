@@ -11,7 +11,7 @@
         public decimal QuantityInMissing { get; set; }
         public bool TransactionInFilled { get; set; }
         public bool OneYearOrMore { get; set; }
-        public DateTime BuyAndSellInterval { get; set; }
+        public TimeSpan BuyAndSellInterval { get; set; }
 
     }
 }
