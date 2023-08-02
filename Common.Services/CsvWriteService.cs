@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace Common.Services
 {
-    public class CsvReaderService : IReader
+    public class CsvWriteService : IWriter, IDisposable
     {
         private StreamReader _streamReader;
         private CsvReader _csvReader;
@@ -12,21 +12,13 @@ namespace Common.Services
         {
             if (!File.Exists(filePath))
             {
-                throw new FileNotFoundException("File not found.", filePath);
+                File.Create(filePath).Close();
             }
 
             _streamReader = new StreamReader(filePath) ?? throw new ArgumentNullException(filePath);
             _csvReader = new CsvReader(_streamReader, CultureInfo.InvariantCulture);
         }
 
-        public List<T> ReadRecords<T>()
-        {
-            List<T>? records = null;
-
-            records = _csvReader?.GetRecords<T>().ToList();
-
-            return records;
-        }
         public void Close()
         {
             _csvReader?.Dispose();
@@ -35,6 +27,11 @@ namespace Common.Services
         public void Dispose()
         {
             Close();
+        }
+
+        public void WriteRecords<T>(List<T> list)
+        {
+            throw new NotImplementedException();
         }
     }
 
