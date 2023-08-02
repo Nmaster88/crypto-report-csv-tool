@@ -160,8 +160,8 @@ namespace CsvReaderApp.Services
                 if (accountReportResult != null)
                 {
                     transactionResult.InCoin = accountReportResult.Coin;
-                    transactionResult.BuyAndSellInterval = options.TransactionOut.DateTime - accountReportResult.DateTime;
-                    transactionResult.OneYearOrMore = transactionResult.BuyAndSellInterval.TotalDays > 365 ? true : false;
+                    transactionResult.BuyAndSellInterval = options.TransactionOut.DateTime - accountReportResult.DateTime; //TODO: needs fixing
+                    transactionResult.OneYearOrMore = transactionResult.BuyAndSellInterval.TotalDays > 365 ? true : false; //TODO: needs fixing
                 }
                 if (!transaction.TransactionInFilled)
                 {
@@ -184,8 +184,8 @@ namespace CsvReaderApp.Services
                     if (accountReportResult != null)
                     {
                         transactionResult.InCoin = accountReportResult.Coin;
-                        transactionResult.BuyAndSellInterval = options.TransactionOut.DateTime - accountReportResult.DateTime;
-                        transactionResult.OneYearOrMore = transactionResult.BuyAndSellInterval.TotalDays > 365 ? true : false;
+                        transactionResult.BuyAndSellInterval = options.TransactionOut.DateTime - accountReportResult.DateTime; //TODO: needs fixing
+                        transactionResult.OneYearOrMore = transactionResult.BuyAndSellInterval.TotalDays > 365 ? true : false; //TODO: needs fixing
                     }
                     DecisionTransaction(options.IncreaseAccountReportListByCoin, options.TransactionOut, transactionResult);
                 }
@@ -256,7 +256,7 @@ namespace CsvReaderApp.Services
         {
             return new TransactionResult
             {
-                OutCoin = transactionOut.Coin,
+                OutCoin = transactionOut.Coin, //TODO: needs fixing
                 TransactionInId = transactionInId,
                 TransactionOutId = transactionOut.Id,
                 QuantityIn = quantityIn,
