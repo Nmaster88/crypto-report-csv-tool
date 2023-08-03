@@ -1,9 +1,10 @@
-﻿using CsvHelper;
+﻿using Common.Services.Interfaces;
+using CsvHelper;
 using System.Globalization;
 
 namespace Common.Services
 {
-    public class CsvReaderService : IReader
+    public class CsvReaderService : Interfaces.IReader
     {
         private StreamReader _streamReader;
         private CsvReader _csvReader;

@@ -1,4 +1,4 @@
-﻿using Common.Services;
+﻿using Common.Services.Interfaces;
 
 namespace CsvReaderApp.Services
 {

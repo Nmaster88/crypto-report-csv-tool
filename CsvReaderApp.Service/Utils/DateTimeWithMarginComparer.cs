@@ -2,7 +2,7 @@
 {
     public class DateTimeWithMarginComparer : IEqualityComparer<DateTime>
     {
-         public bool Equals(DateTime x, DateTime y)
+        public bool Equals(DateTime x, DateTime y)
         {
             // Compare DateTime values within a 1-second margin of error
             return Math.Abs((x - y).TotalSeconds) <= 1;

@@ -1,13 +1,13 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using AutoMapper;
 using Common.Services;
+using Common.Services.Interfaces;
 using CsvReaderApp.Binance.Models;
 using CsvReaderApp.Console.Utils;
 using CsvReaderApp.Models;
 using CsvReaderApp.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Collections.Generic;
 
 var configuration = ConfigurationSetup();
 

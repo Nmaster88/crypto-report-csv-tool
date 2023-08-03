@@ -1,5 +1,5 @@
 using Common.Services;
-using CsvHelper;
+using Common.Services.Interfaces;
 using Moq;
 
 namespace CommonServicesTests
@@ -7,7 +7,7 @@ namespace CommonServicesTests
     [TestClass]
     public class CsvReaderServiceTests
     {
-        private Common.Services.IReader _csvReader;
+        private IReader _csvReader;
 
         private string _testFilePath = $"files{Path.DirectorySeparatorChar}test.csv"; // Path to a test CSV file
 
@@ -32,7 +32,7 @@ namespace CommonServicesTests
             string filePath = "nonexistentfile.csv";
 
             // Create a mock for IReader
-            var mockReader = new Mock<Common.Services.IReader>();
+            var mockReader = new Mock<IReader>();
 
             // Set up the Open method to throw an exception when the file doesn't exist
             mockReader.Setup(x => x.Open(filePath)).Throws(new FileNotFoundException("File not found.", filePath));

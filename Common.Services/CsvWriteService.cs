@@ -1,18 +1,25 @@
-﻿using CsvHelper;
+﻿using Common.Services.Interfaces;
+using CsvHelper;
 using System.Globalization;
 
 namespace Common.Services
 {
-    public class CsvWriterService : IWriter, IDisposable
+    public class CsvWriterService : Interfaces.IWriter
     {
-        private StreamReader _streamReader;
-        private CsvReader _csvReader;
+        private StreamReader? _streamReader;
+        private CsvReader? _csvReader;
+        private readonly IFileSystem _fileSystem;
+
+        public CsvWriterService(IFileSystem fileSystem)
+        {
+            _fileSystem = fileSystem;
+        }
 
         public void Open(string filePath)
         {
-            if (!File.Exists(filePath))
+            if (!_fileSystem.FileExists(filePath))
             {
-                File.Create(filePath).Close();
+                _fileSystem.CreateEmptyFile(filePath);
             }
 
             _streamReader = new StreamReader(filePath) ?? throw new ArgumentNullException(filePath);
