@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace Common.Services
 {
-    public class CsvWriteService : IWriter, IDisposable
+    public class CsvWriterService : IWriter, IDisposable
     {
         private StreamReader _streamReader;
         private CsvReader _csvReader;
@@ -13,11 +13,6 @@ namespace Common.Services
             if (!File.Exists(filePath))
             {
                 File.Create(filePath).Close();
-            }
-
-            if(_streamReader == null || _csvReader == null) 
-            {
-                Close();
             }
 
             _streamReader = new StreamReader(filePath) ?? throw new ArgumentNullException(filePath);
