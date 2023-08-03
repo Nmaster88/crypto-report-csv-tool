@@ -6,7 +6,7 @@ namespace Common.Services
     {
         private StreamReader? _streamReader;
 
-        public void New(string filePath)
+        public StreamReaderWrapper(string filePath)
         {
             _streamReader = new StreamReader(filePath);
         }
