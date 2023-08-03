@@ -43,6 +43,30 @@ namespace CommonServicesTests
         }
 
         [TestMethod]
+        public void Open_SameFileTwice_Success()
+        {
+            // Arrange
+            var readerService = new CsvReaderService();
+
+            // Act
+            readerService.Open(_testFilePath);
+            var records = readerService.ReadRecords<TestRecord>();
+            //readerService.Close();
+
+            // Open the same file again
+            readerService.Open(_testFilePath);
+            var records2 = readerService.ReadRecords<TestRecord>();
+            readerService.Close();
+
+            // Assert
+            Assert.IsNotNull(records);
+            Assert.IsTrue(records.Count > 0);
+
+            Assert.IsNotNull(records2);
+            Assert.IsTrue(records2.Count > 0);
+        }
+
+        [TestMethod]
         public void Open_WhenGivenValidFilePath_ShouldOpenCsvFile()
         {
             // Arrange

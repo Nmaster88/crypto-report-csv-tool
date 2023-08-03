@@ -15,6 +15,11 @@ namespace Common.Services
                 File.Create(filePath).Close();
             }
 
+            if(_streamReader == null || _csvReader == null) 
+            {
+                Close();
+            }
+
             _streamReader = new StreamReader(filePath) ?? throw new ArgumentNullException(filePath);
             _csvReader = new CsvReader(_streamReader, CultureInfo.InvariantCulture);
         }
