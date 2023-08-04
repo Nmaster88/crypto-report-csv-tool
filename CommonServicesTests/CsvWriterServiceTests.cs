@@ -1,6 +1,7 @@
 ﻿using Common.Services;
 using Common.Services.Interfaces;
 using Common.Services.Mocks;
+using Moq;
 
 namespace CommonServicesTests
 {
@@ -11,25 +12,29 @@ namespace CommonServicesTests
 
         private string _testFilePath = $"files{Path.DirectorySeparatorChar}testwrite.csv"; // Path to a test CSV file
 
+        private IStreamReaderWrapper? _streamReaderWrapper;
         private readonly IFileSystem _fileSystem;
+        private readonly IStreamReaderWrapperFactory _streamReaderWrapperFactory;
+
 
         public CsvWriterServiceTests()     
         { 
             _fileSystem = new MockFileSystem();
+            var expectedLine = "Sample Line";
+            var _streamReaderWrapperMock = new Mock<IStreamReaderWrapper>();
+            _streamReaderWrapperMock.Setup(x => x.ReadLine()).Returns(expectedLine);
+
+            //_streamReaderWrapperMock.Setup(x => x.)
+            var streamReaderWrapperFactoryMock = new Mock<IStreamReaderWrapperFactory>();
+            streamReaderWrapperFactoryMock.Setup(x => x.Create(_testFilePath)).Returns(_streamReaderWrapperMock.Object);
+            _streamReaderWrapperFactory = streamReaderWrapperFactoryMock.Object;
+            //_streamReader = new Mock<StreamReaderWrapper>().Object;
         }
-
-
-        private class TestRecord
-        {
-            public string col1 { get; set; }
-            public string col2 { get; set; }
-            public string col3 { get; set; }
-        };
 
         [TestInitialize]
         public void Initialize()
         {
-            this._csvWriter = new CsvWriterService(_fileSystem);
+            this._csvWriter = new CsvWriterService(_fileSystem, _streamReaderWrapperFactory);
 
             // Ensure the test file does not exist before each test
             if(_fileSystem.FileExists(_testFilePath))

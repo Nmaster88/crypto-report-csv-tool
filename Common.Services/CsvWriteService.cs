@@ -6,13 +6,18 @@ namespace Common.Services
 {
     public class CsvWriterService : Interfaces.IWriter
     {
-        private StreamReader? _streamReader;
+        private IStreamReaderWrapper? _streamReader;
         private CsvReader? _csvReader;
         private readonly IFileSystem _fileSystem;
+        private readonly IStreamReaderWrapperFactory _streamReaderWrapperFactory;
 
-        public CsvWriterService(IFileSystem fileSystem)
+        public CsvWriterService(
+            IFileSystem fileSystem, 
+            IStreamReaderWrapperFactory streamReaderWrapperFactory
+            )
         {
             _fileSystem = fileSystem;
+            _streamReaderWrapperFactory = streamReaderWrapperFactory;
         }
 
         public void Open(string filePath)
@@ -22,8 +27,8 @@ namespace Common.Services
                 _fileSystem.CreateEmptyFile(filePath);
             }
 
-            _streamReader = new StreamReader(filePath) ?? throw new ArgumentNullException(filePath);
-            _csvReader = new CsvReader(_streamReader, CultureInfo.InvariantCulture);
+            _streamReader = _streamReaderWrapperFactory.Create(filePath) ?? throw new ArgumentNullException(filePath);
+            _csvReader = new CsvReader(new StreamReaderWrapperAdapter(_streamReader), CultureInfo.InvariantCulture);
         }
 
         public void Close()

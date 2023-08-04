@@ -2,7 +2,7 @@
 
 namespace Common.Services
 {
-    public class StreamReaderWrapper : IStreamReaderWrapper
+    public class StreamReaderWrapper : TextReader, IStreamReaderWrapper
     {
         private StreamReader? _streamReader;
 
