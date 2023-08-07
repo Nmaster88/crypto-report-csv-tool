@@ -65,6 +65,12 @@ namespace CommonServicesTests
         }
 
         [TestMethod]
+        public void Open_ThrowsObjectDisposedException_IfDisposed()
+        {
+            //TODO work on test
+        }
+
+        [TestMethod]
         public void WriteRecords_WhenFileDoesNotExist()
         { }
 
