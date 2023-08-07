@@ -8,6 +8,7 @@ namespace Common.Services
     {
         private IStreamReaderWrapper? _streamReader;
         private CsvReader? _csvReader;
+        private bool disposed = false;
         private readonly IFileSystem _fileSystem;
         private readonly IStreamReaderWrapperFactory _streamReaderWrapperFactory;
 
@@ -22,6 +23,11 @@ namespace Common.Services
 
         public void Open(string filePath)
         {
+            if (disposed)
+            {
+                throw new ObjectDisposedException(nameof(CsvReaderService), "Cannot call Open on a disposed object.");
+            }
+
             if (!_fileSystem.FileExists(filePath))
             {
                 _fileSystem.CreateEmptyFile(filePath);
@@ -36,9 +42,27 @@ namespace Common.Services
             _csvReader?.Dispose();
             _streamReader?.Dispose();
         }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposed)
+            {
+                if (disposing)
+                {
+                    Close();
+                }
+
+                // Release unmanaged resources (if any) and set large fields to null
+                // ...
+
+                disposed = true;
+            }
+        }
+
         public void Dispose()
         {
-            Close();
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         public void WriteRecords<T>(List<T> list)

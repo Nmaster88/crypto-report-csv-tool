@@ -24,5 +24,10 @@ namespace Common.Services
         {
             _streamReader?.Dispose();
         }
+
+        public void Open(string filePath)
+        {
+            _streamReader = new StreamReader(filePath);
+        }
     }
 }

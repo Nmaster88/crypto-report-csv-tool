@@ -2,7 +2,7 @@
 
 namespace Common.Services
 {
-    public class StreamReaderWrapperAdapter : TextReader
+    public class StreamReaderWrapperAdapter : TextReader, IDisposable
     {
         private readonly IStreamReaderWrapper _streamReaderWrapper;
 
@@ -11,6 +11,16 @@ namespace Common.Services
             _streamReaderWrapper = streamReaderWrapper;
         }
 
+        public void Open(string filePath)
+        {
+            _streamReaderWrapper.Open(filePath);
+        }
+
         public override string? ReadLine() => _streamReaderWrapper.ReadLine();
+
+        public void Dispose()
+        {
+            _streamReaderWrapper.Dispose();
+        }
     }
 }
