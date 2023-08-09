@@ -28,6 +28,16 @@ namespace Common.Services
                 throw new ObjectDisposedException(nameof(CsvReaderService), "Cannot call Open on a disposed object.");
             }
 
+            if(_streamReader != null || _csvReader != null) 
+            {
+                throw new InvalidOperationException("Call Close method first. It is in Opened state already.");
+            }
+
+            if(filePath == null)
+            {
+                throw new ArgumentNullException(nameof(filePath));
+            }
+
             if (!_fileSystem.FileExists(filePath))
             {
                 _fileSystem.CreateEmptyFile(filePath);
@@ -41,10 +51,17 @@ namespace Common.Services
         {
             _csvReader?.Dispose();
             _streamReader?.Dispose();
+            _csvReader = null;
+            _streamReader = null;
         }
 
         protected virtual void Dispose(bool disposing)
         {
+            if(disposed)
+            {
+                return;
+            }
+
             if (!disposed)
             {
                 if (disposing)
