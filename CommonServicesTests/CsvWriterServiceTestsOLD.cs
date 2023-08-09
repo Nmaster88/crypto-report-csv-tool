@@ -6,9 +6,9 @@ using Moq;
 namespace CommonServicesTests
 {
     [TestClass]
-    public class CsvWriterServiceTests
+    public class CsvWriterServiceTestsOLD
     {
-        private IWriter? _csvWriter;
+        private IWriterOLD? _csvWriter;
 
         private string _testFilePath = $"files{Path.DirectorySeparatorChar}testwrite.csv"; // Path to a test CSV file
 
@@ -17,7 +17,7 @@ namespace CommonServicesTests
         private readonly IStreamReaderWrapperFactory _streamReaderWrapperFactory;
 
 
-        public CsvWriterServiceTests()     
+        public CsvWriterServiceTestsOLD()     
         { 
             _fileSystem = new MockFileSystem();
             var expectedLine = "Sample Line";
@@ -34,7 +34,7 @@ namespace CommonServicesTests
         [TestInitialize]
         public void Initialize()
         {
-            this._csvWriter = new CsvWriterService(_fileSystem, _streamReaderWrapperFactory, _testFilePath);
+            this._csvWriter = new CsvWriterServiceOLD(_fileSystem, _streamReaderWrapperFactory);
 
             // Ensure the test file does not exist before each test
             if(_fileSystem.FileExists(_testFilePath))
@@ -51,6 +51,17 @@ namespace CommonServicesTests
             {
                 _fileSystem.Delete(_testFilePath);
             }
+        }
+
+        [TestMethod]
+        public void Open_CreatesFile_WhenFileDoesNotExist()
+        {
+            // Arrange
+            // Act
+            _csvWriter.Open(_testFilePath);
+
+            // Assert
+            Assert.IsTrue(_fileSystem.FileExists(_testFilePath), "File should have been created.");
         }
 
         [TestMethod]
