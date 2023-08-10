@@ -38,7 +38,7 @@ namespace CommonServicesTests
             // Ensure the test file does not exist before each test
             if (_fileSystem.FileExists(_testFilePath))
             {
-                _fileSystem.Delete(_testFilePath);
+                _fileSystem.DeleteFile(_testFilePath);
             }
         }
 
@@ -48,7 +48,7 @@ namespace CommonServicesTests
             _csvWriter.Dispose();
             if (_fileSystem.FileExists(_testFilePath))
             {
-                _fileSystem.Delete(_testFilePath);
+                _fileSystem.DeleteFile(_testFilePath);
             }
         }
 

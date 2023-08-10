@@ -1,4 +1,5 @@
 ﻿using Common.Services.Interfaces;
+using CsvHelper;
 
 namespace Common.Services
 {
@@ -14,9 +15,19 @@ namespace Common.Services
             File.Create(filePath).Close();
         }
 
-        public void Delete(string filePath)
+        public void DeleteFile(string filePath)
         {
             File.Delete(filePath);
+        }
+
+        public void WriteAllText(string filePath, string text)
+        {
+            File.WriteAllText(filePath, text);
+        }
+
+        public string ReadAllText(string filePath)
+        {
+            return File.ReadAllText(filePath);
         }
     }
 }
