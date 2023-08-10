@@ -1,40 +1,54 @@
 ﻿using Common.Services.Interfaces;
 using CsvHelper;
 using System.Globalization;
-using System.IO;
 
 namespace Common.Services
 {
-    /// <summary>
-    /// Overcomplicated class design
-    /// </summary>
     public class CsvWriterService : Interfaces.IWriter
     {
-        private readonly IStreamReaderWrapper? _streamReader;
-        private readonly CsvReader? _csvReader;
+        private readonly TextWriter? _textWriter;
+        private readonly CsvWriter? _csvWriter;
         private readonly IFileSystem _fileSystem;
-        private readonly IStreamReaderWrapperFactory _streamReaderWrapperFactory;
+        private readonly IStreamWriterWrapperFactory _streamWriterWrapperFactory;
 
         public CsvWriterService(
             IFileSystem fileSystem,
-            IStreamReaderWrapperFactory streamReaderWrapperFactory,
+            IStreamWriterWrapperFactory streamWriterWrapperFactory,
             string filePath
             )
         {
-            _fileSystem = fileSystem;
-            _streamReaderWrapperFactory = streamReaderWrapperFactory;
-            _streamReader = _streamReaderWrapperFactory.Create(filePath) ?? throw new ArgumentNullException(filePath);
-            _csvReader = new CsvReader(new StreamReaderWrapperAdapter(_streamReader), CultureInfo.InvariantCulture);
+            _fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
+            _streamWriterWrapperFactory = streamWriterWrapperFactory ?? throw new ArgumentNullException(nameof(streamWriterWrapperFactory));
+
+            if (string.IsNullOrWhiteSpace(filePath))
+            {
+                throw new ArgumentException("File path cannot be null or empty.", nameof(filePath));
+            }
+
+            var _streamWriter = _streamWriterWrapperFactory.Create(filePath) ?? throw new ArgumentNullException(filePath);
+            _textWriter = new StreamWriterWrapperAdapter(_streamWriter);
+            _csvWriter = new CsvWriter(_textWriter, CultureInfo.InvariantCulture);
+
+            if (!_fileSystem.FileExists(filePath))
+            {
+                _fileSystem.CreateEmptyFile(filePath);
+            }
         }
 
         public void Dispose()
         {
-            _streamReader?.Dispose();
+            _csvWriter?.Dispose();
+            _textWriter?.Dispose();
         }
 
         public void WriteRecords<T>(List<T> list)
         {
-            throw new NotImplementedException();
+            if (list == null)
+            {
+                throw new ArgumentNullException(nameof(list));
+            }
+
+            _csvWriter?.WriteRecords(list);
         }
     }
 

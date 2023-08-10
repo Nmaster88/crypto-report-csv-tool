@@ -9,19 +9,19 @@ namespace Common.Services
     /// </summary>
     public class CsvWriterServiceOLD : Interfaces.IWriterOLD
     {
-        private IStreamReaderWrapper? _streamReader;
-        private CsvReader? _csvReader;
+        private IStreamWriterWrapper? _streamWriter;
+        private CsvWriter? _csvWriter;
         private bool disposed = false;
         private readonly IFileSystem _fileSystem;
-        private readonly IStreamReaderWrapperFactory _streamReaderWrapperFactory;
+        private readonly IStreamWriterWrapperFactory _streamWriterWrapperFactory;
 
         public CsvWriterServiceOLD(
-            IFileSystem fileSystem, 
-            IStreamReaderWrapperFactory streamReaderWrapperFactory
+            IFileSystem fileSystem,
+            IStreamWriterWrapperFactory streamWriterWrapperFactory
             )
         {
             _fileSystem = fileSystem;
-            _streamReaderWrapperFactory = streamReaderWrapperFactory;
+            _streamWriterWrapperFactory = streamWriterWrapperFactory;
         }
 
         public void Open(string filePath)
@@ -31,12 +31,12 @@ namespace Common.Services
                 throw new ObjectDisposedException(nameof(CsvReaderService), "Cannot call Open on a disposed object.");
             }
 
-            if(_streamReader != null || _csvReader != null) 
+            if (_streamWriter != null || _csvWriter != null)
             {
                 throw new InvalidOperationException("Call Close method first. It is in Opened state already.");
             }
 
-            if(filePath == null)
+            if (filePath == null)
             {
                 throw new ArgumentNullException(nameof(filePath));
             }
@@ -46,21 +46,20 @@ namespace Common.Services
                 _fileSystem.CreateEmptyFile(filePath);
             }
 
-            _streamReader = _streamReaderWrapperFactory.Create(filePath) ?? throw new ArgumentNullException(filePath);
-            _csvReader = new CsvReader(new StreamReaderWrapperAdapter(_streamReader), CultureInfo.InvariantCulture);
+            _streamWriter = _streamWriterWrapperFactory.Create(filePath) ?? throw new ArgumentNullException(filePath);
+            _csvWriter = new CsvWriter(new StreamWriterWrapperAdapter(_streamWriter), CultureInfo.InvariantCulture);
         }
 
         public void Close()
         {
-            _csvReader?.Dispose();
-            _streamReader?.Dispose();
-            _csvReader = null;
-            _streamReader = null;
+            _csvWriter?.Dispose();
+            _csvWriter = null;
+            _streamWriter = null;
         }
 
         protected virtual void Dispose(bool disposing)
         {
-            if(disposed)
+            if (disposed)
             {
                 return;
             }

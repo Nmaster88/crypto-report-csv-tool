@@ -13,7 +13,7 @@ namespace Common.Services
 
         public string ReadLine()
         {
-            if(_streamReader == null)
+            if (_streamReader == null)
             {
                 throw new Exception();
             }
