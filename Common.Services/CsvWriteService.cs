@@ -42,6 +42,7 @@ namespace Common.Services
 
         public void Dispose()
         {
+            _csvWriter?.Flush();
             _csvWriter?.Dispose();
             _textWriter?.Dispose();
         }
@@ -54,7 +55,7 @@ namespace Common.Services
             }
             //TODO: the file is created on disk, but write records doesn't seem to be creating values inside the file
             _csvWriter?.WriteRecords(list);
-            _textWriter?.Close();
+            
         }
     }
 

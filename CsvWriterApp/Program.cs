@@ -13,6 +13,8 @@ lines.Add(new CsvWriterRecord() { Col1 = "Sample Line" });
 
 csvWriterService.WriteRecords(lines);
 
+csvWriterService.Dispose();
+
 public class CsvWriterRecord
 {
     public string Col1 { get; set; }
