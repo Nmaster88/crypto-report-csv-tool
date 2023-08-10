@@ -27,15 +27,17 @@ namespace Common.Services
             }
             _filePath = filePath;
 
+            ////TODO: needs improvement, file needs to be a valid CSV
+            //if (!_fileSystem.FileExists(_filePath))
+            //{
+            //    _fileSystem.CreateEmptyFile(_filePath);
+            //}
+
             var _streamWriter = _streamWriterWrapperFactory.Create(_filePath) ?? throw new ArgumentNullException(_filePath);
             _textWriter = new StreamWriterWrapperAdapter(_streamWriter);
             _csvWriter = new CsvWriter(_textWriter, CultureInfo.InvariantCulture);
 
-            //TODO: needs improvement, file needs to be a valid CSV
-            if (!_fileSystem.FileExists(_filePath))
-            {
-                _fileSystem.CreateEmptyFile(_filePath);
-            }
+
         }
 
         public void Dispose()
@@ -50,8 +52,9 @@ namespace Common.Services
             {
                 throw new ArgumentNullException(nameof(list));
             }
-
+            //TODO: the file is created on disk, but write records doesn't seem to be creating values inside the file
             _csvWriter?.WriteRecords(list);
+            _textWriter?.Close();
         }
     }
 
