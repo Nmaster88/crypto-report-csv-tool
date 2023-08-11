@@ -18,5 +18,30 @@ namespace Common.Services
         {
             return this.Encoding;
         }
+
+        public override void Flush()
+        {
+            _streamWriter?.Flush();
+        }
+
+        public override async Task FlushAsync()
+        {
+            _streamWriter?.FlushAsync().ConfigureAwait(false);
+        }
+
+        public override void Write(char[] buffer, int index, int count)
+        {
+            _streamWriter?.Write(buffer, index, count);
+        }
+
+        public override async Task WriteAsync(char[] buffer, int index, int count)
+        {
+            await _streamWriter?.WriteAsync(buffer, index, count);
+        }
+
+        public void Dispose()
+        {
+            _streamWriter?.Dispose();
+        }
     }
 }
