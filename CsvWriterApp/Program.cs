@@ -1,9 +1,9 @@
 ﻿using Common.Services;
+using Common.Services.Interfaces;
 
-IStreamWriterWrapperFactory systemWriterWrapperFactory = new StreamWriterWrapperFactory();
 string filePath = $"C:{Path.DirectorySeparatorChar}Users{Path.DirectorySeparatorChar}nunog{Path.DirectorySeparatorChar}Downloads{Path.DirectorySeparatorChar}filetodelete.csv";
 
-using (CsvWriterService csvWriterService = new CsvWriterService(systemWriterWrapperFactory, filePath))
+using (IWriter csvWriterService = new CsvWriterFactory().create(filePath))
 {
     List<CsvWriterRecord> lines = new List<CsvWriterRecord>();
     lines.Add(new CsvWriterRecord() { Col1 = "Sample Line" });

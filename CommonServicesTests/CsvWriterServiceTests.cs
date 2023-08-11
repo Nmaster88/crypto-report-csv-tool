@@ -17,7 +17,6 @@ namespace CommonServicesTests
         private readonly string _expectedLine = "Sample Line";
         private readonly IStreamWriterWrapper? _streamWriterWrapper;
         private readonly IFileSystem _fileSystem;
-        private readonly IStreamWriterWrapperFactory _streamWriterWrapperFactory;
         private class CsvWriterRecord 
         {
             public string Col1 { get; set; }
@@ -59,14 +58,12 @@ namespace CommonServicesTests
 
             var streamWriterWrapperFactoryMock = Substitute.For<IStreamWriterWrapperFactory>();
             streamWriterWrapperFactoryMock.Create(_testFilePath).Returns(_streamWriterWrapper);
-
-            _streamWriterWrapperFactory = streamWriterWrapperFactoryMock;
         }
 
         [TestInitialize]
         public void Initialize()
         {
-            this._csvWriterService = new CsvWriterService(_streamWriterWrapperFactory, _testFilePath);
+            this._csvWriterService = new CsvWriterService(_testFilePath);
         }
 
         [TestCleanup]
