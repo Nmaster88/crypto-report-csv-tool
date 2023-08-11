@@ -1,7 +1,7 @@
 ﻿using Common.Services;
 using Common.Services.Interfaces;
 
-string filePath = $"C:{Path.DirectorySeparatorChar}Users{Path.DirectorySeparatorChar}nunog{Path.DirectorySeparatorChar}Downloads{Path.DirectorySeparatorChar}filetodelete.csv";
+string filePath = $"C:{Path.DirectorySeparatorChar}Users{Path.DirectorySeparatorChar}Nuno{Path.DirectorySeparatorChar}Downloads{Path.DirectorySeparatorChar}filetodelete.csv";
 
 using (IWriter csvWriterService = new CsvWriterFactory(new StreamWriterWrapperFactory()).Create(filePath))
 {
