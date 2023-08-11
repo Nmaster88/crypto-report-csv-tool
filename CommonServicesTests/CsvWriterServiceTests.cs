@@ -5,6 +5,7 @@ using CsvHelper.Configuration;
 using NSubstitute;
 using System.Globalization;
 using System.IO;
+using System.Text;
 
 namespace CommonServicesTests
 {
@@ -27,6 +28,34 @@ namespace CommonServicesTests
             _fileSystem = Substitute.For<IFileSystem>();
 
             _streamWriterWrapper = Substitute.For<IStreamWriterWrapper>();
+            _streamWriterWrapper.GetEncoding().Returns(Encoding.UTF8);
+
+            // Example behavior for WriteLine
+            _streamWriterWrapper.When(x => x.WriteLine(Arg.Any<string>()))
+                               .Do(callInfo =>
+                               {
+                                   string text = callInfo.Arg<string>();
+                                   Console.WriteLine($"Writing text: {text}");
+                               });
+
+            // Example behavior for Flush
+            _streamWriterWrapper.When(x => x.Flush())
+                               .Do(_ =>
+                               {
+                                   Console.WriteLine("Flush called");
+                               });
+
+            _streamWriterWrapper.When(x => x.Write(Arg.Any<char[]>(), Arg.Any<int>(), Arg.Any<int>()))
+                   .Do(callInfo =>
+                   {
+                       char[] buffer = callInfo.ArgAt<char[]>(0);
+                       string text = new string(buffer);
+                       Console.WriteLine($"Writing text: {text}");
+                   });
+
+            // Example behavior for WriteAsync
+            _streamWriterWrapper.WriteAsync(Arg.Any<char[]>(), Arg.Any<int>(), Arg.Any<int>())
+                               .Returns(Task.CompletedTask);
 
             var streamWriterWrapperFactoryMock = Substitute.For<IStreamWriterWrapperFactory>();
             streamWriterWrapperFactoryMock.Create(_testFilePath).Returns(_streamWriterWrapper);
@@ -59,6 +88,8 @@ namespace CommonServicesTests
             _csvWriterService.WriteRecords(lines);
             //mock for _streamWriterWrapper?
 
+            //Assert
+            _streamWriterWrapper.Received(2).Write(Arg.Any<char[]>(), Arg.Any<int>(), Arg.Any<int>());      
         }
 
         private void DeleteMockedFile()
