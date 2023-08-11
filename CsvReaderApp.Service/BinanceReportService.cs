@@ -210,7 +210,7 @@ namespace CsvReaderApp.Services
 
             var transactionInEnums = Enum.GetNames(typeof(OperationEnum))
                 .Where(
-                    e => 
+                    e =>
                     e == OperationEnum.Buy.ToString()
                     || e == OperationEnum.Transaction_Related.ToString()
                     || e == OperationEnum.Large_OTC_trading.ToString()

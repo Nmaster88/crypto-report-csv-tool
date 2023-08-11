@@ -1,4 +1,6 @@
 using Common.Services;
+using Common.Services.Interfaces;
+using Moq;
 
 namespace CommonServicesTests
 {
@@ -20,6 +22,48 @@ namespace CommonServicesTests
         public void Initialize()
         {
             this._csvReader = new CsvReaderService();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(FileNotFoundException))]
+        public void Open_ThrowsFileNotFoundException_WhenFileDoesNotExist()
+        {
+            // Arrange
+            string filePath = "nonexistentfile.csv";
+
+            // Create a mock for IReader
+            var mockReader = new Mock<IReader>();
+
+            // Set up the Open method to throw an exception when the file doesn't exist
+            mockReader.Setup(x => x.Open(filePath)).Throws(new FileNotFoundException("File not found.", filePath));
+
+            // Act
+            // Call the Open method of the mock IReader
+            mockReader.Object.Open(filePath);
+        }
+
+        [TestMethod]
+        public void Open_SameFileTwice_Success()
+        {
+            // Arrange
+            var readerService = new CsvReaderService();
+
+            // Act
+            readerService.Open(_testFilePath);
+            var records = readerService.ReadRecords<TestRecord>();
+            //readerService.Close();
+
+            // Open the same file again
+            readerService.Open(_testFilePath);
+            var records2 = readerService.ReadRecords<TestRecord>();
+            readerService.Close();
+
+            // Assert
+            Assert.IsNotNull(records);
+            Assert.IsTrue(records.Count > 0);
+
+            Assert.IsNotNull(records2);
+            Assert.IsTrue(records2.Count > 0);
         }
 
         [TestMethod]

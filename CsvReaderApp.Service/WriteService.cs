@@ -2,15 +2,15 @@
 
 namespace CsvReaderApp.Services
 {
-    public interface IReaderService
+    public interface IWriteService
     {
-        List<T> ReadRecords<T>(string filePath);
+        List<T> WriteRecords<T>(string filePath);
     }
-    public class ReaderService : IReaderService
+    public class WriteService : IWriteService
     {
         private readonly IReader _reader;
 
-        public ReaderService(IReader reader)
+        public WriteService(IReader reader)
         {
             _reader = reader ?? throw new ArgumentNullException(nameof(reader));
         }
@@ -23,6 +23,11 @@ namespace CsvReaderApp.Services
             List<T>? records = _reader.ReadRecords<T>();
 
             return records;
+        }
+
+        public List<T> WriteRecords<T>(string filePath)
+        {
+            throw new NotImplementedException();
         }
     }
 }

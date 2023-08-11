@@ -3,13 +3,18 @@ using System.Globalization;
 
 namespace Common.Services
 {
-    public class CsvReaderService : IReader
+    public class CsvReaderService : Interfaces.IReader
     {
         private StreamReader _streamReader;
         private CsvReader _csvReader;
 
         public void Open(string filePath)
         {
+            if (!File.Exists(filePath))
+            {
+                throw new FileNotFoundException("File not found.", filePath);
+            }
+
             _streamReader = new StreamReader(filePath) ?? throw new ArgumentNullException(filePath);
             _csvReader = new CsvReader(_streamReader, CultureInfo.InvariantCulture);
         }
