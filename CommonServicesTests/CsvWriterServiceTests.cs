@@ -1,10 +1,6 @@
 ﻿using Common.Services;
 using Common.Services.Interfaces;
-using CsvHelper;
-using CsvHelper.Configuration;
 using NSubstitute;
-using System.Globalization;
-using System.IO;
 using System.Text;
 
 namespace CommonServicesTests
@@ -14,17 +10,16 @@ namespace CommonServicesTests
     {
         private Common.Services.Interfaces.IWriter? _csvWriterService;
         private readonly string _testFilePath = $"files{Path.DirectorySeparatorChar}testwrite.csv"; // Maybe we dont want to create a real file
-        private readonly string _expectedLine = "Sample Line";
         private readonly IStreamWriterWrapper? _streamWriterWrapper;
-        private readonly IFileSystem _fileSystem;
-        private class CsvWriterRecord 
+        private readonly IStreamWriterWrapperFactory? _streamWriterWrapperFactory;
+        private class CsvWriterRecord
         {
             public string Col1 { get; set; }
         }
 
         public CsvWriterServiceTests()
         {
-            _fileSystem = Substitute.For<IFileSystem>();
+            //_fileSystem = Substitute.For<IFileSystem>();
 
             _streamWriterWrapper = Substitute.For<IStreamWriterWrapper>();
             _streamWriterWrapper.GetEncoding().Returns(Encoding.UTF8);
@@ -56,22 +51,20 @@ namespace CommonServicesTests
             _streamWriterWrapper.WriteAsync(Arg.Any<char[]>(), Arg.Any<int>(), Arg.Any<int>())
                                .Returns(Task.CompletedTask);
 
-            var streamWriterWrapperFactoryMock = Substitute.For<IStreamWriterWrapperFactory>();
-            streamWriterWrapperFactoryMock.Create(_testFilePath).Returns(_streamWriterWrapper);
+            _streamWriterWrapperFactory = Substitute.For<IStreamWriterWrapperFactory>();
+            _streamWriterWrapperFactory.Create(_testFilePath).Returns(_streamWriterWrapper);
         }
 
         [TestInitialize]
         public void Initialize()
         {
-            this._csvWriterService = new CsvWriterService(_testFilePath);
+            this._csvWriterService = new CsvWriterService(_streamWriterWrapper);
         }
 
         [TestCleanup]
         public void TestCleanup()
         {
-            _csvWriterService.Dispose();
-
-            DeleteMockedFile();
+            _csvWriterService?.Dispose();
         }
 
         [TestMethod]
@@ -83,18 +76,9 @@ namespace CommonServicesTests
 
             //Act
             _csvWriterService.WriteRecords(lines);
-            //mock for _streamWriterWrapper?
 
             //Assert
-            _streamWriterWrapper.Received(2).Write(Arg.Any<char[]>(), Arg.Any<int>(), Arg.Any<int>());      
-        }
-
-        private void DeleteMockedFile()
-        {
-            if (_fileSystem.FileExists(_testFilePath))
-            {
-                _fileSystem.DeleteFile(_testFilePath);
-            }
+            _streamWriterWrapper.Received(2).Write(Arg.Any<char[]>(), Arg.Any<int>(), Arg.Any<int>());
         }
     }
 }

@@ -6,21 +6,15 @@ namespace Common.Services
 {
     public class CsvWriterService : Interfaces.IWriter
     {
-        private readonly string _filePath;
         private readonly TextWriter? _textWriter;
         private readonly CsvWriter? _csvWriter;
 
         public CsvWriterService(
-            string filePath
+            IStreamWriterWrapper writer
             )
         {
-            if (string.IsNullOrWhiteSpace(filePath))
-            {
-                throw new ArgumentException("File path cannot be null or empty.", nameof(filePath));
-            }
-            _filePath = filePath;
-            _textWriter = new StreamWriter(_filePath);
-
+            _ = writer ?? throw new ArgumentNullException(nameof(writer));
+            _textWriter = new StreamWriterWrapperAdapter(writer);
             _csvWriter = new CsvWriter(_textWriter, CultureInfo.InvariantCulture);
         }
 
@@ -37,9 +31,7 @@ namespace Common.Services
             {
                 throw new ArgumentNullException(nameof(list));
             }
-            //TODO: the file is created on disk, but write records doesn't seem to be creating values inside the file
             _csvWriter?.WriteRecords(list);
-            
         }
     }
 

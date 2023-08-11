@@ -1,18 +1,18 @@
 ﻿using Common.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Common.Services
 {
     public class CsvWriterFactory : ICsvWriterFactory
     {
-
-        public IWriter create(string filePath)
+        private readonly IStreamWriterWrapperFactory _writerFactory;
+        public CsvWriterFactory(IStreamWriterWrapperFactory writerFactory)
         {
-            return new CsvWriterService(filePath);
+            _writerFactory = writerFactory;
+        }
+        public IWriter Create(string filePath)
+        {
+            return new CsvWriterService(_writerFactory.Create(filePath));
+
         }
     }
 }

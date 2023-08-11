@@ -9,6 +9,10 @@ namespace Common.Services
 
         public StreamWriterWrapper(string filePath)
         {
+            if (string.IsNullOrEmpty(filePath))
+            {
+                throw new ArgumentNullException(nameof(filePath));
+            }
             _streamWriter = new StreamWriter(filePath);
         }
 
@@ -36,7 +40,7 @@ namespace Common.Services
 
         public override async Task WriteAsync(char[] buffer, int index, int count)
         {
-            await _streamWriter?.WriteAsync(buffer, index, count);
+            _streamWriter?.WriteAsync(buffer, index, count).ConfigureAwait(false);
         }
 
         public void Dispose()
