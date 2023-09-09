@@ -21,7 +21,7 @@ namespace CommonServicesTests
         [TestInitialize]
         public void Initialize()
         {
-            this._csvReader = new CsvReaderService();
+            this._csvReader = new CsvReaderServiceOLD();
         }
 
         [TestMethod]
@@ -46,7 +46,7 @@ namespace CommonServicesTests
         public void Open_SameFileTwice_Success()
         {
             // Arrange
-            var readerService = new CsvReaderService();
+            var readerService = new CsvReaderServiceOLD();
 
             // Act
             readerService.Open(_testFilePath);
@@ -82,7 +82,7 @@ namespace CommonServicesTests
         public void ReadRecords_WhenCalled_ShouldReturnListOfRecords()
         {
             // Arrange
-            var reader = new CsvReaderService();
+            var reader = new CsvReaderServiceOLD();
             reader.Open(_testFilePath);
 
             // Act
@@ -97,7 +97,7 @@ namespace CommonServicesTests
         public void Close_WhenCalled_ShouldCloseCsvFile()
         {
             // Arrange
-            var reader = new CsvReaderService();
+            var reader = new CsvReaderServiceOLD();
             reader.Open(_testFilePath);
 
             // Act

@@ -26,7 +26,7 @@ do
     string inputFileName = Console.ReadLine();
     string filePath = !string.IsNullOrEmpty(inputFileName) ? inputFileName : Path.GetFullPath($"{directory}{Path.DirectorySeparatorChar}{fileName}");
 
-    IReader reader = new CsvReaderService();
+    IReader reader = new CsvReaderServiceOLD();
     ReaderService readerService = new ReaderService(reader);
     var binanceReport = readerService.ReadRecords<ReportEntry>(filePath);
 

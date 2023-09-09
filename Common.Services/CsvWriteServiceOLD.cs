@@ -28,7 +28,7 @@ namespace Common.Services
         {
             if (disposed)
             {
-                throw new ObjectDisposedException(nameof(CsvReaderService), "Cannot call Open on a disposed object.");
+                throw new ObjectDisposedException(nameof(CsvReaderServiceOLD), "Cannot call Open on a disposed object.");
             }
 
             if (_streamWriter != null || _csvWriter != null)

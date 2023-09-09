@@ -1,22 +1,20 @@
-﻿using CsvHelper;
+﻿using Common.Services.Interfaces;
+using CsvHelper;
 using System.Globalization;
+using System.IO;
 
 namespace Common.Services
 {
     public class CsvReaderService : Interfaces.IReader
     {
-        private StreamReader _streamReader;
-        private CsvReader _csvReader;
+        private readonly TextReader? _textReader;
+        private readonly CsvReader? _csvReader;
 
-        public void Open(string filePath)
+        public CsvReaderService(IStreamReaderWrapper reader)
         {
-            if (!File.Exists(filePath))
-            {
-                throw new FileNotFoundException("File not found.", filePath);
-            }
-
-            _streamReader = new StreamReader(filePath) ?? throw new ArgumentNullException(filePath);
-            _csvReader = new CsvReader(_streamReader, CultureInfo.InvariantCulture);
+            _ = reader ?? throw new ArgumentNullException(nameof(reader));
+            _textReader = new StreamReaderWrapperAdapter(reader);
+            _csvReader = new CsvReader(_textReader, CultureInfo.InvariantCulture);
         }
 
         public List<T> ReadRecords<T>()
@@ -30,11 +28,17 @@ namespace Common.Services
         public void Close()
         {
             _csvReader?.Dispose();
-            _streamReader?.Dispose();
+            _textReader?.Dispose();
         }
         public void Dispose()
         {
-            Close();
+            _csvReader?.Dispose();
+            _textReader?.Dispose();
+        }
+
+        public void Open(string filePath)
+        {
+            throw new NotImplementedException();
         }
     }
 

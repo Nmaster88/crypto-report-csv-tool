@@ -56,68 +56,74 @@ namespace CommonServicesTests
         [TestInitialize]
         public void Initialize()
         {
-            this._csvReaderService = new CsvReaderService();
+            this._csvReaderService = new CsvReaderServiceOLD();
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(FileNotFoundException))]
-        public void Open_ThrowsFileNotFoundException_WhenFileDoesNotExist()
+        [TestCleanup]
+        public void TestCleanup()
         {
-            // Arrange
-            string filePath = "nonexistentfile.csv";
-
-            // Create a mock for IReader
-            var mockReader = new Mock<IReader>();
-
-            // Set up the Open method to throw an exception when the file doesn't exist
-            mockReader.Setup(x => x.Open(filePath)).Throws(new FileNotFoundException("File not found.", filePath));
-
-            // Act
-            // Call the Open method of the mock IReader
-            mockReader.Object.Open(filePath);
+            _csvReaderService?.Dispose();
         }
 
-        [TestMethod]
-        public void Open_SameFileTwice_Success()
-        {
-            // Arrange
-            var readerService = new CsvReaderService();
+        //[TestMethod]
+        //[ExpectedException(typeof(FileNotFoundException))]
+        //public void Open_ThrowsFileNotFoundException_WhenFileDoesNotExist()
+        //{
+        //    // Arrange
+        //    string filePath = "nonexistentfile.csv";
 
-            // Act
-            readerService.Open(_testFilePath);
-            var records = readerService.ReadRecords<TestRecord>();
-            //readerService.Close();
+        //    // Create a mock for IReader
+        //    var mockReader = new Mock<IReader>();
 
-            // Open the same file again
-            readerService.Open(_testFilePath);
-            var records2 = readerService.ReadRecords<TestRecord>();
-            readerService.Close();
+        //    // Set up the Open method to throw an exception when the file doesn't exist
+        //    mockReader.Setup(x => x.Open(filePath)).Throws(new FileNotFoundException("File not found.", filePath));
 
-            // Assert
-            Assert.IsNotNull(records);
-            Assert.IsTrue(records.Count > 0);
+        //    // Act
+        //    // Call the Open method of the mock IReader
+        //    mockReader.Object.Open(filePath);
+        //}
 
-            Assert.IsNotNull(records2);
-            Assert.IsTrue(records2.Count > 0);
-        }
+        //[TestMethod]
+        //public void Open_SameFileTwice_Success()
+        //{
+        //    // Arrange
+        //    var readerService = new CsvReaderService();
 
-        [TestMethod]
-        public void Open_WhenGivenValidFilePath_ShouldOpenCsvFile()
-        {
-            // Arrange
+        //    // Act
+        //    readerService.Open(_testFilePath);
+        //    var records = readerService.ReadRecords<TestRecord>();
+        //    //readerService.Close();
 
-            // Act
-            this._csvReaderService.Open(_testFilePath);
+        //    // Open the same file again
+        //    readerService.Open(_testFilePath);
+        //    var records2 = readerService.ReadRecords<TestRecord>();
+        //    readerService.Close();
 
-            // Assert
-            Assert.IsNotNull(this._csvReaderService);
-        }
+        //    // Assert
+        //    Assert.IsNotNull(records);
+        //    Assert.IsTrue(records.Count > 0);
+
+        //    Assert.IsNotNull(records2);
+        //    Assert.IsTrue(records2.Count > 0);
+        //}
+
+        //[TestMethod]
+        //public void Open_WhenGivenValidFilePath_ShouldOpenCsvFile()
+        //{
+        //    // Arrange
+
+        //    // Act
+        //    this._csvReaderService.Open(_testFilePath);
+
+        //    // Assert
+        //    Assert.IsNotNull(this._csvReaderService);
+        //}
 
         [TestMethod]
         public void ReadRecords_WhenCalled_ShouldReturnListOfRecords()
         {
             // Arrange
-            var reader = new CsvReaderService();
+            var reader = new CsvReaderServiceOLD();
             reader.Open(_testFilePath);
 
             // Act
@@ -132,7 +138,7 @@ namespace CommonServicesTests
         public void Close_WhenCalled_ShouldCloseCsvFile()
         {
             // Arrange
-            var reader = new CsvReaderService();
+            var reader = new CsvReaderServiceOLD();
             reader.Open(_testFilePath);
 
             // Act
