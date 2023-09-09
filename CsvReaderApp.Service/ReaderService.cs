@@ -19,7 +19,6 @@ namespace CsvReaderApp.Services
         {
             _ = filePath ?? throw new ArgumentNullException(filePath);
 
-            _reader.Open(filePath);
             List<T>? records = _reader.ReadRecords<T>();
 
             return records;

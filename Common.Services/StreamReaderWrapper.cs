@@ -10,7 +10,10 @@ namespace Common.Services
 
         public StreamReaderWrapper(string filePath)
         {
-
+            if (string.IsNullOrEmpty(filePath))
+            {
+                throw new ArgumentNullException(nameof(filePath));
+            }
             _streamReader = new StreamReader(filePath);
         }
 
@@ -21,6 +24,16 @@ namespace Common.Services
                 throw new Exception();
             }
             return _streamReader?.ReadLine();
+        }
+
+        public override int Read(char[] buffer, int offset, int count)
+        {
+            return _streamReader?.Read(buffer, offset, count) ?? 0;
+        }
+
+        public override async Task<int> ReadAsync(char[] buffer, int offset, int count)
+        {
+            return await (_streamReader?.ReadAsync(buffer, offset, count) ?? Task.FromResult(0));
         }
 
         public void Dispose()
