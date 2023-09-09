@@ -1,18 +1,16 @@
 using Common.Services;
 using Common.Services.Interfaces;
 using Moq;
-using NSubstitute;
-using System.Text;
 
 namespace CommonServicesTests
 {
     [TestClass]
-    public class CsvReaderServiceTests
+    public class CsvReaderServiceTestsOLD
     {
-        private IReader _csvReaderService;
+        private IReader _csvReader;
+
         private string _testFilePath = $"files{Path.DirectorySeparatorChar}test.csv"; // Path to a test CSV file
-        private readonly IStreamReaderWrapper? _streamReaderWrapper;
-        private readonly IStreamReaderWrapperFactory? _streamReaderWrapperFactory;
+
         private class TestRecord
         {
             public string col1 { get; set; }
@@ -20,43 +18,10 @@ namespace CommonServicesTests
             public string col3 { get; set; }
         };
 
-        public CsvReaderServiceTests()
-        {
-            _streamReaderWrapper = Substitute.For<IStreamReaderWrapper>();
-            //_streamReaderWrapper.GetEncoding().Returns(Encoding.UTF8);
-
-            _streamReaderWrapper.When(x => x.ReadLine())
-                               .Do(callInfo =>
-                               {
-                                   string text = callInfo.Arg<string>();
-                                   Console.WriteLine($"Writing text: {text}");
-                               });
-
-            //_streamReaderWrapper.When(x => x.Flush())
-            //                   .Do(_ =>
-            //                   {
-            //                       Console.WriteLine("Flush called");
-            //                   });
-
-            //_streamReaderWrapper.When(x => x.Write(Arg.Any<char[]>(), Arg.Any<int>(), Arg.Any<int>()))
-            //       .Do(callInfo =>
-            //       {
-            //           char[] buffer = callInfo.ArgAt<char[]>(0);
-            //           string text = new string(buffer);
-            //           Console.WriteLine($"Writing text: {text}");
-            //       });
-
-            //_streamReaderWrapper.WriteAsync(Arg.Any<char[]>(), Arg.Any<int>(), Arg.Any<int>())
-            //                   .Returns(Task.CompletedTask);
-
-            _streamReaderWrapperFactory = Substitute.For<IStreamReaderWrapperFactory>();
-            _streamReaderWrapperFactory.Create(_testFilePath).Returns(_streamReaderWrapper);
-        }
-
         [TestInitialize]
         public void Initialize()
         {
-            this._csvReaderService = new CsvReaderService();
+            this._csvReader = new CsvReaderService();
         }
 
         [TestMethod]
@@ -107,10 +72,10 @@ namespace CommonServicesTests
             // Arrange
 
             // Act
-            this._csvReaderService.Open(_testFilePath);
+            this._csvReader.Open(_testFilePath);
 
             // Assert
-            Assert.IsNotNull(this._csvReaderService);
+            Assert.IsNotNull(this._csvReader);
         }
 
         [TestMethod]

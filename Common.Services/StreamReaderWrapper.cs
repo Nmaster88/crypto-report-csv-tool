@@ -1,4 +1,6 @@
 ﻿using Common.Services.Interfaces;
+using System.IO;
+using System.Text;
 
 namespace Common.Services
 {
@@ -8,6 +10,7 @@ namespace Common.Services
 
         public StreamReaderWrapper(string filePath)
         {
+
             _streamReader = new StreamReader(filePath);
         }
 

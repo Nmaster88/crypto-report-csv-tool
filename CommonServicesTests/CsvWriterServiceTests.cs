@@ -8,7 +8,7 @@ namespace CommonServicesTests
     [TestClass]
     public class CsvWriterServiceTests
     {
-        private Common.Services.Interfaces.IWriter? _csvWriterService;
+        private IWriter? _csvWriterService;
         private readonly string _testFilePath = $"files{Path.DirectorySeparatorChar}testwrite.csv"; // Maybe we dont want to create a real file
         private readonly IStreamWriterWrapper? _streamWriterWrapper;
         private readonly IStreamWriterWrapperFactory? _streamWriterWrapperFactory;
@@ -19,12 +19,9 @@ namespace CommonServicesTests
 
         public CsvWriterServiceTests()
         {
-            //_fileSystem = Substitute.For<IFileSystem>();
-
             _streamWriterWrapper = Substitute.For<IStreamWriterWrapper>();
             _streamWriterWrapper.GetEncoding().Returns(Encoding.UTF8);
 
-            // Example behavior for WriteLine
             _streamWriterWrapper.When(x => x.WriteLine(Arg.Any<string>()))
                                .Do(callInfo =>
                                {
@@ -32,7 +29,6 @@ namespace CommonServicesTests
                                    Console.WriteLine($"Writing text: {text}");
                                });
 
-            // Example behavior for Flush
             _streamWriterWrapper.When(x => x.Flush())
                                .Do(_ =>
                                {
@@ -47,7 +43,6 @@ namespace CommonServicesTests
                        Console.WriteLine($"Writing text: {text}");
                    });
 
-            // Example behavior for WriteAsync
             _streamWriterWrapper.WriteAsync(Arg.Any<char[]>(), Arg.Any<int>(), Arg.Any<int>())
                                .Returns(Task.CompletedTask);
 
@@ -75,10 +70,10 @@ namespace CommonServicesTests
             lines.Add(new CsvWriterRecord() { Col1 = "Sample Line" });
 
             //Act
-            _csvWriterService.WriteRecords(lines);
+            _csvWriterService?.WriteRecords(lines);
 
             //Assert
-            _streamWriterWrapper.Received(2).Write(Arg.Any<char[]>(), Arg.Any<int>(), Arg.Any<int>());
+            _streamWriterWrapper?.Received(2).Write(Arg.Any<char[]>(), Arg.Any<int>(), Arg.Any<int>());
         }
     }
 }
