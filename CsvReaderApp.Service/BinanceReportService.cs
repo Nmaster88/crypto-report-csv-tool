@@ -138,9 +138,22 @@ namespace CsvReaderApp.Services
                 if (group.Any(x => x.Coin == coin))
                 {
                     _communication.SendMessage($"time: {group.Key}");
+                    decimal eurQty = 0;
+                    decimal coinPrice = 0;
                     foreach (var element in group)
                     {
-                        _communication.SendMessage($"Coin: {element.Coin} | Operation: {element.Operation} | Change: {element.Change} | Account: {element.Account}");
+                        if (element.Coin.ToLower() == "eur")
+                        {
+                            eurQty = element.Change;
+                        }
+                        string text = $"Coin: {element.Coin} | Operation: {element.Operation} | Change: {element.Change} | Account: {element.Account}";
+                        if (element.Coin.ToLower() != "eur" && element.Operation != OperationEnum.Fee.ToString() && element.Operation != OperationEnum.Referral_Kickback.ToString())
+                        {
+                            coinPrice = eurQty / element.Change;
+                            text += $" | EurPrice {Math.Abs(coinPrice)}";
+                        }
+                        //_communication.SendMessage($"Coin: {element.Coin} | Operation: {element.Operation} | Change: {element.Change} | Account: {element.Account}");
+                        _communication.SendMessage(text);
                     }
                 }
             }
