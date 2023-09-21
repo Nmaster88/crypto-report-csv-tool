@@ -182,10 +182,10 @@ namespace CsvReaderApp.Services
                     eurQty = element.Change;
                 }
                 string text = $"Coin: {element.Coin} | Operation: {element.Operation} | Change: {element.Change} | Account: {element.Account}";
-                if (element.Coin.ToLower() != "eur" && element.Operation != GetValueFromEnum(OperationEnum.Fee.ToString()) && element.Operation != GetValueFromEnum(OperationEnum.Referral_Kickback.ToString()))
+                if (element.Coin.ToLower() != "eur" && element.Operation != GetValueFromEnum(OperationEnum.Fee.ToString()) && element.Operation != GetValueFromEnum(OperationEnum.Referral_Kickback.ToString()) && element.Operation != GetValueFromEnum(OperationEnum.Referral_Commission.ToString()))
                 {
                     coinPrice = eurQty / element.Change;
-                    text += $" | EurPrice {Math.Abs(coinPrice)}";
+                    text += $" | EurPrice {Math.Round(Math.Abs(coinPrice),4)}";
                 }
                 _communication.SendMessage(text);
             }
