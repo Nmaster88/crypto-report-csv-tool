@@ -140,22 +140,8 @@ namespace CsvReaderApp.Services
                 {
                     _communication.SendMessage($"time: {group.Key}");
                     decimal eurQty = 0;
-                    decimal coinPrice = 0; //Still not being used
-                    //foreach (var element in group)
-                    //{
-                    //    if (element.Coin.ToLower() == "eur")
-                    //    {
-                    //        eurQty = element.Change;
-                    //    }
-                    //    string text = $"Coin: {element.Coin} | Operation: {element.Operation} | Change: {element.Change} | Account: {element.Account}";
-                    //    if (element.Coin.ToLower() != "eur" && element.Operation != GetValueFromEnum(OperationEnum.Fee.ToString()) && element.Operation != GetValueFromEnum(OperationEnum.Referral_Kickback.ToString()))
-                    //    {
-                    //        coinPrice = eurQty / element.Change;
-                    //        text += $" | EurPrice {Math.Abs(coinPrice)}";
-                    //    }
-                    //    //_communication.SendMessage($"Coin: {element.Coin} | Operation: {element.Operation} | Change: {element.Change} | Account: {element.Account}");
-                    //    _communication.SendMessage(text);
-                    //}
+                    decimal coinPrice = 0;
+
                     var NegativeChangeGroup = group.Where(c => c.Change <= 0m);
                     var PositiveChangeGroup = group.Where(c => c.Change >= 0m);
 
