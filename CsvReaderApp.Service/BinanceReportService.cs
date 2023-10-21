@@ -1,6 +1,7 @@
 ﻿using CsvReaderApp.Binance.Models;
 using CsvReaderApp.Models;
 using CsvReaderApp.Services.Utils;
+using System.Xml.Linq;
 
 namespace CsvReaderApp.Services
 {
@@ -138,11 +139,41 @@ namespace CsvReaderApp.Services
                 if (group.Any(x => x.Coin == coin))
                 {
                     _communication.SendMessage($"time: {group.Key}");
-                    foreach (var element in group)
+                    decimal eurQty = 0;
+                    decimal coinPrice = 0;
+
+                    var NegativeChangeGroup = group.Where(c => c.Change <= 0m);
+                    var PositiveChangeGroup = group.Where(c => c.Change >= 0m);
+
+                    if (NegativeChangeGroup.Any(c => c.Coin.ToLower() == "eur"))
                     {
-                        _communication.SendMessage($"Coin: {element.Coin} | Operation: {element.Operation} | Change: {element.Change} | Account: {element.Account}");
+                        GroupProcessLogging(NegativeChangeGroup, ref eurQty, ref coinPrice);
+                        GroupProcessLogging(PositiveChangeGroup, ref eurQty, ref coinPrice);
+                    }
+                    else
+                    {
+                        GroupProcessLogging(PositiveChangeGroup, ref eurQty, ref coinPrice);
+                        GroupProcessLogging(NegativeChangeGroup, ref eurQty, ref coinPrice);
                     }
                 }
+            }
+        }
+
+        private void GroupProcessLogging(IEnumerable<AccountReportResult?> group, ref decimal eurQty, ref decimal coinPrice)
+        {
+            foreach (var element in group)
+            {
+                if (element.Coin.ToLower() == "eur")
+                {
+                    eurQty = element.Change;
+                }
+                string text = $"Coin: {element.Coin} | Operation: {element.Operation} | Change: {element.Change} | Account: {element.Account}";
+                if (element.Coin.ToLower() != "eur" && element.Operation != GetValueFromEnum(OperationEnum.Fee.ToString()) && element.Operation != GetValueFromEnum(OperationEnum.Referral_Kickback.ToString()) && element.Operation != GetValueFromEnum(OperationEnum.Referral_Commission.ToString()))
+                {
+                    coinPrice = eurQty / element.Change;
+                    text += $" | EurPrice {Math.Round(Math.Abs(coinPrice),4)}";
+                }
+                _communication.SendMessage(text);
             }
         }
 

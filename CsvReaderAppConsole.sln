@@ -19,7 +19,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CsvReaderAppServicesTests",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CsvReaderApp.Binance.Models", "CsvReaderApp.Binance.Models\CsvReaderApp.Binance.Models.csproj", "{0904D718-3FB5-46F7-B0C9-85D7BE4D42E6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsvWriterApp.Console", "CsvWriterApp\CsvWriterApp.Console.csproj", "{D807CB0A-894A-4D2A-900B-01F78FC8B2FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CsvWriterApp.Console", "CsvWriterApp\CsvWriterApp.Console.csproj", "{D807CB0A-894A-4D2A-900B-01F78FC8B2FA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Apis", "Apis", "{178DEB47-55F3-45E3-BB51-BCADBDEE92CB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
