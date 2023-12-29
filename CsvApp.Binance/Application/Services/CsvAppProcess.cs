@@ -7,6 +7,14 @@ namespace CsvApp.Binance.Application.Services
     {
         public List<IncomeGainsDto> Process(List<IncomeGainsDto> list)
         {
+            var result = list
+                .GroupBy(i => i.Asset)
+                .Select(v => new
+                {
+                    Asset = v.Key,
+                    TotalValueEUR = v.Sum(t => t.Value)
+                }
+                );
             throw new NotImplementedException();
         }
 
