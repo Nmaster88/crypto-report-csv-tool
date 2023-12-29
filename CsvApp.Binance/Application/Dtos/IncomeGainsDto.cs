@@ -1,6 +1,6 @@
-﻿namespace CsvReaderApp.Binance.Models
+﻿namespace CsvApp.Binance.Application.Dtos
 {
-    public record IncomeGains(
+    public record IncomeGainsDto(
         DateTime Date,
         string Asset,
         decimal Amount,

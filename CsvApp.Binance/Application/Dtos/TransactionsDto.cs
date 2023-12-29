@@ -1,6 +1,5 @@
-﻿namespace CsvReaderApp.Binance.Models
-{
-    public record Transactions(
+﻿namespace CsvApp.Binance.Application.Dtos;
+public record TransactionsDto(
         string Id,
         DateTime Date,
         string Type,
@@ -14,4 +13,3 @@
         string FeeCurrency /*Fee Currency*/,
         string Comment
         );
-}

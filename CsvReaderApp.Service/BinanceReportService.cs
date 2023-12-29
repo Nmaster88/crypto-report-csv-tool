@@ -1,7 +1,6 @@
 ﻿using CsvReaderApp.Binance.Models;
 using CsvReaderApp.Models;
 using CsvReaderApp.Services.Utils;
-using System.Xml.Linq;
 
 namespace CsvReaderApp.Services
 {
@@ -171,7 +170,7 @@ namespace CsvReaderApp.Services
                 if (element.Coin.ToLower() != "eur" && element.Operation != GetValueFromEnum(OperationEnum.Fee.ToString()) && element.Operation != GetValueFromEnum(OperationEnum.Referral_Kickback.ToString()) && element.Operation != GetValueFromEnum(OperationEnum.Referral_Commission.ToString()))
                 {
                     coinPrice = eurQty / element.Change;
-                    text += $" | EurPrice {Math.Round(Math.Abs(coinPrice),4)}";
+                    text += $" | EurPrice {Math.Round(Math.Abs(coinPrice), 4)}";
                 }
                 _communication.SendMessage(text);
             }

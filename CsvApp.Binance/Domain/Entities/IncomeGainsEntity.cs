@@ -1,6 +1,6 @@
-﻿namespace CsvReaderApp.Binance.Models
+﻿namespace CsvApp.Binance.Domain.Entities
 {
-    public record IncomeGains(
+    public record IncomeGainsEntity(
         DateTime Date,
         string Asset,
         decimal Amount,
