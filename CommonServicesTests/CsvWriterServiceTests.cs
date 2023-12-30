@@ -19,8 +19,6 @@ namespace CommonServicesTests
 
         public CsvWriterServiceTests()
         {
-            //_fileSystem = Substitute.For<IFileSystem>();
-
             _streamWriterWrapper = Substitute.For<IStreamWriterWrapper>();
             _streamWriterWrapper.GetEncoding().Returns(Encoding.UTF8);
 
