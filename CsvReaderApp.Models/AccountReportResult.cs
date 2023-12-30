@@ -1,5 +1,6 @@
 ﻿namespace CsvReaderApp.Models
 {
+    [Obsolete("to be migrated")]
     public class AccountReportResult
     {
         public string Account { get; set; } = string.Empty;

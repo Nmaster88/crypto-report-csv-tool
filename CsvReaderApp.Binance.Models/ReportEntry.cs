@@ -1,5 +1,6 @@
 ﻿namespace CsvReaderApp.Binance.Models
 {
+    [Obsolete("to be migrated")]
     public class ReportEntry
     {
         public int User_ID { get; set; }
