@@ -10,8 +10,6 @@ using Microsoft.Extensions.DependencyInjection;
 
 var configuration = ConfigurationSetup();
 
-
-
 string directory = configuration.GetSection("AppSettings").GetValue<string>("Directory") ?? "C:\\Users\\Nuno\\Downloads";
 string fileNameToRead = configuration.GetSection("AppSettings").GetValue<string>("FileNameToRead") ?? "binance_report_2021.csv";
 string fileNameToWrite = "output_text.txt";
@@ -24,7 +22,6 @@ var result = await csvApp.GetRealizedCapitalGains();
 
 try
 {
-    // Write values to the text file
     using (StreamWriter writer = new StreamWriter($"{directory}{Path.DirectorySeparatorChar}{fileNameToWrite}"))
     {
         foreach (var item in result)
