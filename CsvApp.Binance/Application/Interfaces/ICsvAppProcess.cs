@@ -6,5 +6,6 @@ namespace CsvApp.Binance.Application.Interfaces
     {
         List<IncomeGainsDto> Process(List<IncomeGainsDto> list);
         List<TransactionsDto> Process(List<TransactionsDto> list);
+        List<string> Process(List<RealizedCapitalGainsDto> list);
     }
 }

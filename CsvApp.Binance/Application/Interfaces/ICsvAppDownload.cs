@@ -6,5 +6,6 @@ namespace CsvApp.Binance.Application.Interfaces
     {
         Task<List<IncomeGainsDto>> DownloadIncomeGains();
         Task<List<TransactionsDto>> DownloadTransations();
+        Task<List<RealizedCapitalGainsDto>> DownloadRealizedCapitalGains();
     }
 }

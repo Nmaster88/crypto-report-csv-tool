@@ -51,5 +51,24 @@ namespace CsvApp.Binance.Application.Services
 
             return await Task.FromResult(entities.ToViews().ToList());
         }
+
+        public async Task<List<RealizedCapitalGainsDto>> DownloadRealizedCapitalGains()
+        {
+            List<RealizedCapitalGainsEntity>? entities = null;
+            try
+            {
+                entities = await _filesRepository.GetRealizedCapitalGains();
+            }
+            catch (Exception ex)
+            {
+                //TODO: handle exception
+            }
+            if (entities == null)
+            {
+                //throw new DeserializationFailureException("Failure to deserialize data.");
+            }
+
+            return await Task.FromResult(entities.ToViews().ToList());
+        }
     }
 }

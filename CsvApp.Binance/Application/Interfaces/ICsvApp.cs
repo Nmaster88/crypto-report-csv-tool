@@ -2,9 +2,10 @@
 
 namespace CsvApp.Binance.Application.Interfaces
 {
-    internal interface ICsvApp
+    public interface ICsvApp
     {
         public Task<List<IncomeGainsDto>> GetIncomeGains();
         public Task<List<TransactionsDto>> GetTransactions();
+        public Task<List<string>> GetRealizedCapitalGains();
     }
 }

@@ -39,5 +39,24 @@ namespace CsvApp.Binance.Application.Mappers
                     transactions.Comment);
             });
         }
+
+        public static IEnumerable<RealizedCapitalGainsDto> ToViews(this IEnumerable<RealizedCapitalGainsEntity> entities)
+        {
+            return entities.Select(realizedCapitalGains =>
+            {
+                return new RealizedCapitalGainsDto(
+                    realizedCapitalGains.CurrencyName,
+                    realizedCapitalGains.CurrencyAmount,
+                    realizedCapitalGains.Acquired,
+                    realizedCapitalGains.Sold,
+                    realizedCapitalGains.ProceedsEur,
+                    realizedCapitalGains.CostBasisEur,
+                    realizedCapitalGains.GainsEur,
+                    realizedCapitalGains.HoldingPeriodDays,
+                    realizedCapitalGains.TransactionType,
+                    realizedCapitalGains.Label
+                    );
+            });
+        }
     }
 }

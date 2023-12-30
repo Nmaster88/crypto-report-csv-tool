@@ -34,5 +34,15 @@ namespace CsvApp.Binance.Infrastructure
 
             return await Task.FromResult(records);
         }
+
+        public async Task<List<RealizedCapitalGainsEntity>?> GetRealizedCapitalGains()
+        {
+            _ = FilePath ?? throw new ArgumentNullException(FilePath);
+
+            _reader.Open(FilePath);
+            List<RealizedCapitalGainsEntity>? records = _reader.ReadRecords<RealizedCapitalGainsEntity>();
+
+            return await Task.FromResult(records);
+        }
     }
 }

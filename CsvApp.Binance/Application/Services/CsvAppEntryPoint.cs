@@ -33,5 +33,14 @@ namespace CsvApp.Binance.Application.Services
 
             return processedResult;
         }
+
+        public async Task<List<string>> GetRealizedCapitalGains()
+        {
+            var result = await _csvAppDownload.DownloadRealizedCapitalGains();
+
+            var processedResult = _csvAppProcess.Process(result);
+
+            return processedResult;
+        }
     }
 }

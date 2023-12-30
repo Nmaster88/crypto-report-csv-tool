@@ -6,5 +6,6 @@ namespace CsvApp.Binance.Domain.Interfaces
     {
         Task<List<TransactionsEntity>?> GetTransactions();
         Task<List<IncomeGainsEntity>?> GetIncomeGains();
+        Task<List<RealizedCapitalGainsEntity>?> GetRealizedCapitalGains();
     }
 }
