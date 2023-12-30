@@ -1,5 +1,6 @@
 ﻿namespace CsvReaderApp.Binance.Models
 {
+    [Obsolete("to be migrated")]
     public enum OperationEnum
     {
         //2021
