@@ -26,7 +26,7 @@ try
     {
         foreach (var item in result)
         {
-            writer.WriteLine(item);
+            writer.Write(item);
         }
     }
 
