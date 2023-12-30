@@ -73,16 +73,6 @@ accountReportService.ReportTransactionsOutAndRelatedWithCoin(destinationList, "E
 
 Console.ReadLine();
 
-
-//TODO: study the possiblity to replace ObjectAssignementService and ConvertService with AutoMapper (Is this migrated to another repository?)
-//ObjectAssignementService<List<BinanceReportEntry>, List<AccountReportResult>> objectAssignmentService = new ObjectAssignementService<List<BinanceReportEntry>, List<AccountReportResult>>();
-//objectAssignmentService.Setup();
-//objectAssignmentService.Mapping();
-
-//ConvertService<List<BinanceReportEntry>, List<AccountReportResult>> convertService = new ConvertService<List<BinanceReportEntry>, List<AccountReportResult>>(objectAssignmentService);
-//convertService.Convert(binanceReport, new List<AccountReportResult>());
-
-
 IConfiguration ConfigurationSetup()
 {
     var builder = new ConfigurationBuilder()
