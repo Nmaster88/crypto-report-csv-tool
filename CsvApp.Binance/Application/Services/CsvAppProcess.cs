@@ -24,6 +24,25 @@ namespace CsvApp.Binance.Application.Services
             throw new NotImplementedException();
         }
 
+        //<AnexoGq09T01-Linha numero = "1" >
+        //< NLinha > 9001 </ NLinha >
+        //< Titular > A </ Titular >
+        //< NIF > 505060515 </ NIF >
+        //< CodEncargos > G01 </ CodEncargos >
+        //< AnoRealizacao > 2022 </ AnoRealizacao >
+        //< MesRealizacao > 1 </ MesRealizacao >
+        //< DiaRealizacao > 19 </ DiaRealizacao >
+        //< ValorRealizacao > 30.00 </ ValorRealizacao >
+        //< AnoAquisicao > 2021 </ AnoAquisicao >
+        //< MesAquisicao > 11 </ MesAquisicao >
+        //< DiaAquisicao > 19 </ DiaAquisicao >
+        //< ValorAquisicao > 26.70 </ ValorAquisicao >
+        //< DespesasEncargos > 1.00 </ DespesasEncargos >
+        //< PaisContraparte > 528 </ PaisContraparte >
+        //</ AnexoGq09T01 - Linha >
+
+        //or ???
+
         //<AnexoJq092AT01-Linha numero = "2">
         //<NLinha> 952 </NLinha>
         //<CodPais> 276 </CodPais>
