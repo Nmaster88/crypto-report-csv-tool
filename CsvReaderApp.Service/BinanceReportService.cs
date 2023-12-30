@@ -4,6 +4,7 @@ using CsvReaderApp.Services.Utils;
 
 namespace CsvReaderApp.Services
 {
+    [Obsolete("to be migrated")]
     public interface IBinanceReportService
     {
         void ReportSummary(List<AccountReportResult> accountReportResultList);
@@ -13,6 +14,8 @@ namespace CsvReaderApp.Services
         void ReportDistinctOperations(List<AccountReportResult> accountReportResultList);
         void ReportByCoin(List<AccountReportResult> accountReportResultList, string coin);
     }
+
+    [Obsolete("to be migrated")]
     public class BinanceReportService : IBinanceReportService
     {
         private readonly ICommunication _communication;

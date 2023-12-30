@@ -10,6 +10,7 @@ namespace CsvReaderApp.Services
     /// </summary>
     /// <typeparam name="TI"></typeparam>
     /// <typeparam name="TO"></typeparam>
+    [Obsolete("to be migrated")]
     public class ConvertService<TI, TO>
     {
         private readonly ObjectAssignementService<TI, TO> _objectAssignementService;

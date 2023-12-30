@@ -11,6 +11,7 @@ namespace CsvReaderApp.Services
     /// </summary>
     /// <typeparam name="TI"></typeparam>
     /// <typeparam name="TO"></typeparam>
+    [Obsolete("to be migrated")]
     public class ObjectAssignementService<TI, TO>
     {
         //TODO: console.writeLine or readLine should instead be replaced by DI. So that its generic.
