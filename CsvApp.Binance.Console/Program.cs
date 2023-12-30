@@ -39,61 +39,6 @@ catch (Exception ex)
 {
     Console.WriteLine($"An error occurred: {ex.Message}");
 }
-//List<TransactionsDto> destinationList = new List<TransactionsDto>();
-
-//bool moreFiles = false;
-//do
-//{
-//    Console.WriteLine("What is the Path for the file? Leave empty to use app settings value.");
-//    string inputFileName = Console.ReadLine();
-//    string filePath = !string.IsNullOrEmpty(inputFileName) ? inputFileName : Path.GetFullPath($"{directory}{Path.DirectorySeparatorChar}{fileName}");
-
-//    IReader reader = new CsvReaderService();
-//    ReaderService readerService = new ReaderService(reader);
-//    var binanceReport = readerService.ReadRecords<ReportEntry>(filePath);
-
-//    destinationList.AddRange(mapper.Map<List<AccountReportResult>>(binanceReport));
-
-//    Console.WriteLine("Do you want to add another file? Y/N");
-//    moreFiles = Console.ReadLine().ToLower() == "y" ? true : false;
-//}
-//while (moreFiles);
-
-//ConsoleCommunication consoleCommunication = new ConsoleCommunication();
-
-//BinanceReportService accountReportService = new BinanceReportService(consoleCommunication);
-
-//consoleCommunication.SendMessage("");
-//consoleCommunication.SendMessage("---ReportSummary---");
-//consoleCommunication.SendMessage("");
-
-//accountReportService.ReportSummary(destinationList);
-
-//consoleCommunication.SendMessage("");
-//consoleCommunication.SendMessage("---ReportTransactionsByCoin  EUR---");
-//consoleCommunication.SendMessage("");
-
-//accountReportService.ReportTransactionsWithCoin(destinationList, "EUR");
-
-//consoleCommunication.SendMessage("");
-//consoleCommunication.SendMessage("---ReportDistincOperations---");
-//consoleCommunication.SendMessage("");
-
-//accountReportService.ReportDistinctOperations(destinationList);
-
-//consoleCommunication.SendMessage("");
-//consoleCommunication.SendMessage("---ReportByCoin---");
-//consoleCommunication.SendMessage("");
-
-//accountReportService.ReportByCoin(destinationList, "EUR");
-
-//consoleCommunication.SendMessage("");
-//consoleCommunication.SendMessage("---ReportTransactionsOutAndRelatedWithCoin---");
-//consoleCommunication.SendMessage("");
-
-//accountReportService.ReportTransactionsOutAndRelatedWithCoin(destinationList, "EUR");
-
-//Console.ReadLine();
 
 IConfiguration ConfigurationSetup()
 {
