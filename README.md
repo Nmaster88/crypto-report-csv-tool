@@ -2,6 +2,11 @@
 
 The Crypto Report CSV Tool is a command-line utility for generating CSV reports from cryptocurrency transaction data. It simplifies the process of analyzing and organizing transaction information for tax reporting, portfolio management, or other purposes.
 
+## Important
+
+Looking for colaborators, to help build a tool that helps with getting track of gains or losses from csv reports from exchanges.
+This is important because it helps keep track of information that the exchange doesn't provide out of the box and for taxing purposes.
+
 ## Features
 
 - **CSV Report Generation:** Easily generate CSV reports from cryptocurrency transaction data files.
